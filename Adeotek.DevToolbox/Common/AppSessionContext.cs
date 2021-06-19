@@ -46,34 +46,36 @@ namespace Adeotek.DevToolbox.Common
         
         public void ExecuteTask(Guid taskGuid)
         {
-            var task = Tasks.FirstOrDefault(t => t.Guid == taskGuid && taskGuid != Guid.Empty);
-            if (task is not {IsActive: true})
-            {
-                _logger.LogWarning("AppSessionContext.ExecuteTask invalid or inactive task");
-                return;
-            }
-
+            AppTask task = null;
             try
             {
+                task = Tasks.FirstOrDefault(t => t.Guid == taskGuid && taskGuid != Guid.Empty);
+                if (task is not {IsActive: true})
+                {
+                    _logger.LogWarning("AppSessionContext.ExecuteTask invalid or inactive task");
+                    return;
+                }
+                
                 _tasksManager.ExecuteTask(task);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "AppSessionContext.ExecuteTask [{Task}] exception: {Message}", task.Name, e.Message);
+                _logger.LogError(e, "AppSessionContext.ExecuteTask [{Task}] exception: {Message}", task?.Name ?? taskGuid.ToString(), e.Message);
             }
         }
         
         public void ExecuteScenario(Guid scenarioGuid, bool stopOnFailure = false)
         {
-            var scenario = Scenarios.FirstOrDefault(s => s.Guid == scenarioGuid && scenarioGuid != Guid.Empty);
-            if (scenario is not {IsActive: true} || scenario.Tasks.Count == 0)
-            {
-                _logger.LogWarning("AppSessionContext.ExecuteTask invalid or inactive scenario");
-                return;
-            }
-
+            Scenario scenario = null;
             try
             {
+                scenario = Scenarios.FirstOrDefault(s => s.Guid == scenarioGuid && scenarioGuid != Guid.Empty);
+                if (scenario is not {IsActive: true} || scenario.Tasks.Count == 0)
+                {
+                    _logger.LogWarning("AppSessionContext.ExecuteTask invalid or inactive scenario");
+                    return;
+                }
+                
                 var tasks = (from t in Tasks
                     join s in scenario.Tasks on t.Guid equals s
                     where t.IsActive
@@ -89,7 +91,7 @@ namespace Adeotek.DevToolbox.Common
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "AppSessionContext.ExecuteScenario [{Scenario}] exception: {Message}", scenario.Name, e.Message);
+                _logger.LogError(e, "AppSessionContext.ExecuteScenario [{Scenario}] exception: {Message}", scenario?.Name ?? scenarioGuid.ToString(), e.Message);
             }
         }
         
@@ -100,16 +102,17 @@ namespace Adeotek.DevToolbox.Common
                 _logger.LogWarning("AppSessionContext.ExecuteDefaultScenario no default scenario is defined");
                 return;
             }
-            
-            var scenario = Scenarios.FirstOrDefault(s => s.IsActive && s.Guid == DefaultScenario);
-            if (scenario is not {IsActive: true} || scenario.Tasks.Count == 0)
-            {
-                _logger.LogWarning("AppSessionContext.ExecuteDefaultScenario no default scenario found");
-                return;
-            }
 
+            Scenario scenario = null; 
             try
             {
+                scenario = Scenarios.FirstOrDefault(s => s.IsActive && s.Guid == DefaultScenario);
+                if (scenario is not {IsActive: true} || scenario.Tasks.Count == 0)
+                {
+                    _logger.LogWarning("AppSessionContext.ExecuteDefaultScenario no default scenario found");
+                    return;
+                }
+                
                 var tasks = (from t in Tasks
                     join s in scenario.Tasks on t.Guid equals s
                     where t.IsActive
@@ -125,7 +128,7 @@ namespace Adeotek.DevToolbox.Common
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "AppSessionContext.ExecuteDefaultScenario [{Scenario}] exception: {Message}", scenario.Name, e.Message);
+                _logger.LogError(e, "AppSessionContext.ExecuteDefaultScenario [{Scenario}] exception: {Message}", scenario?.Name ?? DefaultScenario.ToString(), e.Message);
             }
         }
         

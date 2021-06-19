@@ -6,7 +6,7 @@ namespace Adeotek.DevToolbox.Tasks
     {
         public string ProcessName { get; }
 
-        public ApplicationAlreadyRunningException(string processName) : base(null)
+        public ApplicationAlreadyRunningException(string processName) : base(string.Empty)
         {
             ProcessName = processName;
         }

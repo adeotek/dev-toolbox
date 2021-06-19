@@ -30,7 +30,7 @@ namespace Adeotek.DevToolbox.Tasks
                 throw new ArgumentException(@"Null or empty", nameof(executable));
             }
             
-            if (!string.IsNullOrEmpty(processName) || Helpers.IsProcessRunning(processName))
+            if (!string.IsNullOrEmpty(processName) && Helpers.IsProcessRunning(processName))
             {
                 throw new ApplicationAlreadyRunningException(processName);
             }

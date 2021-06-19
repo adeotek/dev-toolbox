@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using Adeotek.DevToolbox.Common;
@@ -18,6 +19,8 @@ namespace Adeotek.DevToolbox.Forms
         private readonly AppSessionContext _context;
         private readonly EventsAggregator _eventsAggregator;
         private readonly ILogger _logger;
+        private List<AppTask> _tasks;
+        private List<Scenario> _scenarios;
 
         public AppConfigurationWindow(
             AppSessionContext context,
@@ -36,10 +39,16 @@ namespace Adeotek.DevToolbox.Forms
             try
             {
                 var appConfiguration = LoadConfigurationData();
-                // Application
+                // General
+                AutoRunAtLogin.Checked = LoadRunAtLogin();
+                AutoRunDefaultScenarioCheckBox.Checked = appConfiguration.RunDefaultScenarioOnStartup;
+                AutoOpenMonitorCheckBox.Checked = appConfiguration.AutoOpenMonitor;
                 DebugModeCheckBox.Checked = appConfiguration.Debug;
-                // AutoStartWorkersCheckBox.Checked = appConfiguration.AutoStartWorkers;
-                // AutoStartMonitorCheckBox.Checked = appConfiguration.AutoStartMonitor;
+                //cbo
+                // Tasks
+                _tasks = appConfiguration.Tasks ?? new List<AppTask>();
+                // Scenarios
+                _scenarios = appConfiguration.Scenarios ?? new List<Scenario>();
             }
             catch (Exception e)
             {
@@ -56,7 +65,7 @@ namespace Adeotek.DevToolbox.Forms
             {
                 throw new Exception($"Invalid or missing configuration file [{physicalPath}]!");
             }
-            var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(physicalPath));
+            var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(physicalPath)) ?? new JObject {{"Application", null}};
             return jObject.TryGetValue("Application", out var config)
                 ? JsonConvert.DeserializeObject<AppConfiguration>(config.ToString())
                 : new AppConfiguration();
@@ -70,19 +79,23 @@ namespace Adeotek.DevToolbox.Forms
                 throw new Exception($"Invalid or missing configuration file [{physicalPath}]!");
             }
             var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(physicalPath)) ?? new JObject {{"Application", null}};
-            var originalConfiguration = jObject.TryGetValue("Application", out var config)
-                ? JsonConvert.DeserializeObject<AppConfiguration>(config.ToString())
-                : new AppConfiguration();
+            // var originalConfiguration = jObject.TryGetValue("Application", out var config)
+            //     ? JsonConvert.DeserializeObject<AppConfiguration>(config.ToString())
+            //     : new AppConfiguration();
 
             var appConfiguration = new AppConfiguration
             {
+                RunDefaultScenarioOnStartup = AutoRunDefaultScenarioCheckBox.Checked,
+                AutoOpenMonitor = AutoOpenMonitorCheckBox.Checked,
+                // DefaultScenario = 
                 Debug = DebugModeCheckBox.Checked,
-                // AutoStartWorkers = AutoStartWorkersCheckBox.Checked,
-                // AutoStartMonitor = AutoStartMonitorCheckBox.Checked,
+                Scenarios = _scenarios,
+                Tasks = _tasks
             };
             
             jObject["Application"] = JObject.Parse(JsonConvert.SerializeObject(appConfiguration));
             File.WriteAllText(physicalPath, JsonConvert.SerializeObject(jObject, Formatting.Indented));
+            SetRunAtLogin(AutoRunAtLogin.Checked);
 
             _context.LoadAppConfiguration(appConfiguration);
         }
@@ -113,7 +126,15 @@ namespace Adeotek.DevToolbox.Forms
                 {
                     throw new Exception($@"Invalid registry key: [Computer\HKEY_CURRENT_USER\{RegistryRunPath}]");
                 }
-                key.SetValue(RegistryValueKey, Application.ExecutablePath);
+
+                if (value)
+                {
+                    key.SetValue(RegistryValueKey, Application.ExecutablePath);
+                }
+                else
+                {
+                    key.DeleteValue(RegistryValueKey);
+                }
             }
             catch (Exception e)
             {

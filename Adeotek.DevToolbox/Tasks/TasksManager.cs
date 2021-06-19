@@ -36,6 +36,10 @@ namespace Adeotek.DevToolbox.Tasks
                 {
                     ExecuteTask(task);
                 }
+                catch (ApplicationAlreadyRunningException are)
+                {
+                    _logger.LogWarning(are, "Task {Name} [{Guid}] skipped: {Message}", task.Name, task.Guid.ToString(), are.Message);
+                }
                 catch (Exception e)
                 {
                     _logger.LogError(e, "Task {Name} [{Guid}] exception: {Message}", task.Name, task.Guid.ToString(), e.Message);
