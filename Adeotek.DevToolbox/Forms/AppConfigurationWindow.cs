@@ -36,19 +36,24 @@ namespace Adeotek.DevToolbox.Forms
 
         private void ConfigureComponents()
         {
+            ErrorMessageLabel.Text = string.Empty;
             try
             {
                 var appConfiguration = LoadConfigurationData();
-                // General
-                AutoRunAtLogin.Checked = LoadRunAtLogin();
-                AutoRunDefaultScenarioCheckBox.Checked = appConfiguration.RunDefaultScenarioOnStartup;
-                AutoOpenMonitorCheckBox.Checked = appConfiguration.AutoOpenMonitor;
-                DebugModeCheckBox.Checked = appConfiguration.Debug;
-                //cbo
                 // Tasks
                 _tasks = appConfiguration.Tasks ?? new List<AppTask>();
                 // Scenarios
                 _scenarios = appConfiguration.Scenarios ?? new List<Scenario>();
+                // General
+                AutoRunAtLoginCheckBox.Checked = LoadRunAtLogin();
+                AutoRunDefaultScenarioCheckBox.Checked = appConfiguration.RunDefaultScenarioOnStartup;
+                AutoOpenMonitorCheckBox.Checked = appConfiguration.AutoOpenMonitor;
+                DebugModeCheckBox.Checked = appConfiguration.Debug;
+                // DefaultScenario               
+                DefaultScenarioComboBox.DataSource = _scenarios;
+                DefaultScenarioComboBox.ValueMember = "Guid";
+                DefaultScenarioComboBox.DisplayMember = "Name";
+                DefaultScenarioComboBox.SelectedValue = appConfiguration.DefaultScenario;
             }
             catch (Exception e)
             {
@@ -87,7 +92,7 @@ namespace Adeotek.DevToolbox.Forms
             {
                 RunDefaultScenarioOnStartup = AutoRunDefaultScenarioCheckBox.Checked,
                 AutoOpenMonitor = AutoOpenMonitorCheckBox.Checked,
-                // DefaultScenario = 
+                DefaultScenario = (Guid) (DefaultScenarioComboBox.SelectedValue ?? Guid.Empty),
                 Debug = DebugModeCheckBox.Checked,
                 Scenarios = _scenarios,
                 Tasks = _tasks
@@ -95,7 +100,7 @@ namespace Adeotek.DevToolbox.Forms
             
             jObject["Application"] = JObject.Parse(JsonConvert.SerializeObject(appConfiguration));
             File.WriteAllText(physicalPath, JsonConvert.SerializeObject(jObject, Formatting.Indented));
-            SetRunAtLogin(AutoRunAtLogin.Checked);
+            SetRunAtLogin(AutoRunAtLoginCheckBox.Checked);
 
             _context.LoadAppConfiguration(appConfiguration);
         }
@@ -131,14 +136,14 @@ namespace Adeotek.DevToolbox.Forms
                 {
                     key.SetValue(RegistryValueKey, Application.ExecutablePath);
                 }
-                else
+                else if (key.GetValue(RegistryValueKey) != null)
                 {
                     key.DeleteValue(RegistryValueKey);
                 }
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "SetRunAtLogin [{Value}] exception: {Message}", value.ToString(), e.Message);
+                _logger.LogError(e, "SetRunAtLogin {Value} to [{ValueName}] exception: {Message}", value.ToString(), RegistryValueKey, e.Message);
             }
         }
         

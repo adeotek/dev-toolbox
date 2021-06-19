@@ -55,28 +55,31 @@ namespace Adeotek.DevToolbox.Forms
             // RunDefaultScenario
             // 
             this.RunDefaultScenario.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.RunDefaultScenario.BackColor = System.Drawing.SystemColors.ControlLight;
             this.RunDefaultScenario.Location = new System.Drawing.Point(500, 676);
             this.RunDefaultScenario.Name = "RunDefaultScenario";
             this.RunDefaultScenario.Size = new System.Drawing.Size(140, 23);
             this.RunDefaultScenario.TabIndex = 4;
             this.RunDefaultScenario.Text = "Run Default Scenario";
-            this.RunDefaultScenario.UseVisualStyleBackColor = true;
+            this.RunDefaultScenario.UseVisualStyleBackColor = false;
             this.RunDefaultScenario.Click += new System.EventHandler(this.RunDefaultScenarioButton_Click);
             // 
             // RunAllTasks
             // 
             this.RunAllTasks.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.RunAllTasks.BackColor = System.Drawing.SystemColors.ControlLight;
             this.RunAllTasks.Location = new System.Drawing.Point(646, 676);
             this.RunAllTasks.Name = "RunAllTasks";
             this.RunAllTasks.Size = new System.Drawing.Size(140, 23);
             this.RunAllTasks.TabIndex = 6;
             this.RunAllTasks.Text = "Run All Tasks";
-            this.RunAllTasks.UseVisualStyleBackColor = true;
+            this.RunAllTasks.UseVisualStyleBackColor = false;
             this.RunAllTasks.Click += new System.EventHandler(this.RunAllTasksButton_Click);
             // 
             // TestingButton
             // 
             this.TestingButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.TestingButton.BackColor = System.Drawing.SystemColors.ControlLight;
             this.TestingButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.TestingButton.ForeColor = System.Drawing.Color.Maroon;
             this.TestingButton.Location = new System.Drawing.Point(792, 647);
@@ -84,25 +87,25 @@ namespace Adeotek.DevToolbox.Forms
             this.TestingButton.Size = new System.Drawing.Size(140, 23);
             this.TestingButton.TabIndex = 8;
             this.TestingButton.Text = "TEST";
-            this.TestingButton.UseVisualStyleBackColor = true;
+            this.TestingButton.UseVisualStyleBackColor = false;
             this.TestingButton.Click += new System.EventHandler(this.TestingButton_Click);
             // 
             // ClearButton
             // 
             this.ClearButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ClearButton.BackColor = System.Drawing.SystemColors.ControlLight;
             this.ClearButton.ForeColor = System.Drawing.Color.Maroon;
             this.ClearButton.Location = new System.Drawing.Point(12, 676);
             this.ClearButton.Name = "ClearButton";
             this.ClearButton.Size = new System.Drawing.Size(140, 23);
             this.ClearButton.TabIndex = 9;
             this.ClearButton.Text = "Clear";
-            this.ClearButton.UseVisualStyleBackColor = true;
+            this.ClearButton.UseVisualStyleBackColor = false;
             this.ClearButton.Click += new System.EventHandler(this.ClearButton_Click);
             // 
             // MonitorRichTextBox
             // 
-            this.MonitorRichTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.MonitorRichTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MonitorRichTextBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.MonitorRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -118,12 +121,13 @@ namespace Adeotek.DevToolbox.Forms
             // SettingsButton
             // 
             this.SettingsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SettingsButton.BackColor = System.Drawing.SystemColors.ControlLight;
             this.SettingsButton.Location = new System.Drawing.Point(792, 676);
             this.SettingsButton.Name = "SettingsButton";
             this.SettingsButton.Size = new System.Drawing.Size(140, 23);
             this.SettingsButton.TabIndex = 11;
             this.SettingsButton.Text = "Settings";
-            this.SettingsButton.UseVisualStyleBackColor = true;
+            this.SettingsButton.UseVisualStyleBackColor = false;
             this.SettingsButton.Click += new System.EventHandler(this.SettingsButton_Click);
             // 
             // MonitorWindow

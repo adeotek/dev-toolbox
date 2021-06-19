@@ -41,8 +41,8 @@ namespace Adeotek.DevToolbox.Common
         public bool RunDefaultScenarioOnStartup => _appConfiguration?.RunDefaultScenarioOnStartup ?? false;
         public bool AutoOpenMonitor => _appConfiguration?.AutoOpenMonitor ?? false;
         public Guid DefaultScenario => _appConfiguration?.DefaultScenario ?? Guid.Empty;
-        public IEnumerable<AppTask> Tasks => _appConfiguration?.Tasks ?? new List<AppTask>();
         public IEnumerable<Scenario> Scenarios => _appConfiguration?.Scenarios ?? new List<Scenario>();
+        public IEnumerable<AppTask> Tasks => _appConfiguration?.Tasks ?? new List<AppTask>();
         
         public void ExecuteTask(Guid taskGuid)
         {

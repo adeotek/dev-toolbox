@@ -1,5 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
@@ -30,9 +31,7 @@ namespace Adeotek.DevToolbox.Common
             _eventsAggregator.OnNewUserMessage += OnNewUserMessageHandle;
             _logger = logger;
             InitializeComponent();
-            var currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            _trayIcon.BalloonTipText = $@"Version {currentVersion}";
-            _trayIcon.Text = $@"{DefaultTooltipTitle}{Environment.NewLine}Version {currentVersion}";
+            ConfigureComponents();
             if (_context.AutoOpenMonitor)
             {
                 ShowMonitorWindow();
@@ -49,142 +48,136 @@ namespace Adeotek.DevToolbox.Common
         private MonitorWindow _monitorWindow;
         private AppConfigurationWindow _configurationWindow;
         private SplashScreen _splashScreen;
-        // Controls
+        // Fixed Controls
         private NotifyIcon _trayIcon;
         private ContextMenuStrip _mainMenu;
-        private ToolStripMenuItem _offlineSigningMenuItem;
-        private ToolStripMenuItem _onlineSigningMenuItem;
-        private ToolStripMenuItem _restartWorkersMenuItem;
+        private ToolStripSeparator _menuSeparator0;
         private ToolStripSeparator _menuSeparator1;
         private ToolStripMenuItem _monitorMenuItem;
-        private ToolStripMenuItem _testingMenuItem;
         private ToolStripSeparator _menuSeparator2;
         private ToolStripMenuItem _configurationMenuItem;
         private ToolStripMenuItem _aboutMenuItem;
         private ToolStripSeparator _menuSeparator3;
         private ToolStripMenuItem _exitMenuItem;
+        // Dynamic controls
+        private readonly Dictionary<string, ToolStripMenuItem> _dynamicMenuItems = new();
 
         private void InitializeComponent()
         {
-            var resources = new ComponentResourceManager();
-            this._trayIcon = new System.Windows.Forms.NotifyIcon();
-            this._mainMenu = new System.Windows.Forms.ContextMenuStrip();
-            this._offlineSigningMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._onlineSigningMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._menuSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this._restartWorkersMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._monitorMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._testingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._menuSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this._configurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._menuSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this._exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._mainMenu.SuspendLayout();
+            _trayIcon = new NotifyIcon();
+            _mainMenu = new ContextMenuStrip();
+            _menuSeparator0 = new ToolStripSeparator();
+            _menuSeparator1 = new ToolStripSeparator();
+            _monitorMenuItem = new ToolStripMenuItem();
+            _menuSeparator2 = new ToolStripSeparator();
+            _configurationMenuItem = new ToolStripMenuItem();
+            _aboutMenuItem = new ToolStripMenuItem();
+            _menuSeparator3 = new ToolStripSeparator();
+            _exitMenuItem = new ToolStripMenuItem();
+            _mainMenu.SuspendLayout();
             //
             // trayIcon
             //
-            this._trayIcon.BalloonTipIcon = ToolTipIcon.Info;
-            this._trayIcon.BalloonTipText = "";
-            this._trayIcon.BalloonTipTitle = DefaultTooltipTitle;
-            this._trayIcon.ContextMenuStrip = this._mainMenu;
-            this._trayIcon.Icon = Properties.Resources.LogoRound;
-            this._trayIcon.Text = DefaultTooltipTitle;
-            this._trayIcon.Visible = true;
-            this._trayIcon.DoubleClick += this.OnDoubleClick;
+            _trayIcon.BalloonTipIcon = ToolTipIcon.Info;
+            _trayIcon.BalloonTipText = "";
+            _trayIcon.BalloonTipTitle = DefaultTooltipTitle;
+            _trayIcon.ContextMenuStrip = _mainMenu;
+            _trayIcon.Icon = Properties.Resources.LogoRound;
+            _trayIcon.Text = DefaultTooltipTitle;
+            _trayIcon.Visible = true;
+            _trayIcon.DoubleClick += OnDoubleClick;
             //
             // mainMenu
             //
-            this._mainMenu.Items.AddRange(new ToolStripItem[] {
-            this._offlineSigningMenuItem,
-            this._onlineSigningMenuItem,
-            this._menuSeparator1,
-            this._monitorMenuItem,
-            this._restartWorkersMenuItem,
-            this._testingMenuItem,
-            this._menuSeparator2,
-            this._configurationMenuItem,
-            this._aboutMenuItem,
-            this._menuSeparator3,
-            this._exitMenuItem});
-            this._mainMenu.Name = "_mainMenu";
-            this._mainMenu.Size = new System.Drawing.Size(274, 110);
+            _mainMenu.Name = "_mainMenu";
+            _mainMenu.Size = new System.Drawing.Size(274, 110);
             //
-            // tsmnuGoOffline
+            // tsmnuSeparator0
             //
-            this._offlineSigningMenuItem.Name = "_offlineSigningMenuItem";
-            this._offlineSigningMenuItem.Size = new System.Drawing.Size(273, 24);
-            this._offlineSigningMenuItem.Text = "Empty option 1";
-            this._offlineSigningMenuItem.Click += this.OnGoOfflineMenuClick;
-            _offlineSigningMenuItem.Enabled = false;
-            //
-            // tsmnuGoOnline
-            //
-            this._onlineSigningMenuItem.Name = "_onlineSigningMenuItem";
-            this._onlineSigningMenuItem.Size = new System.Drawing.Size(273, 24);
-            this._onlineSigningMenuItem.Text = "Empty option 2";
-            this._onlineSigningMenuItem.Click += this.OnGoOnlineMenuClick;
-            _onlineSigningMenuItem.Enabled = false;
+            _menuSeparator0.Name = "_menuSeparator0";
+            _menuSeparator0.Size = new System.Drawing.Size(270, 6);
             //
             // tsmnuSeparator1
             //
-            this._menuSeparator1.Name = "_menuSeparator1";
-            this._menuSeparator1.Size = new System.Drawing.Size(270, 6);
-            //
-            // tsmnuStart
-            //
-            this._restartWorkersMenuItem.Name = "_restartWorkersMenuItem";
-            this._restartWorkersMenuItem.Size = new System.Drawing.Size(273, 24);
-            this._restartWorkersMenuItem.Text = "Start...";
-            this._restartWorkersMenuItem.Click += this.OnRestartMenuClick;
+            _menuSeparator1.Name = "_menuSeparator1";
+            _menuSeparator1.Size = new System.Drawing.Size(270, 6);
             //
             // tsmnuLog
             //
-            this._monitorMenuItem.Name = "_monitorMenuItem";
-            this._monitorMenuItem.Size = new System.Drawing.Size(273, 24);
-            this._monitorMenuItem.Text = "Monitor";
-            this._monitorMenuItem.Click += this.OnMonitorViewMenuClick;
-            //
-            // tsmnuTesting
-            //
-            this._testingMenuItem.Name = "_testingMenuItem";
-            this._testingMenuItem.Size = new System.Drawing.Size(273, 24);
-            this._testingMenuItem.Text = "TESTING";
-            this._testingMenuItem.Click += this.OnTestingMenuClick;
-            this._testingMenuItem.Visible = _context.DebugMode;
+            _monitorMenuItem.Name = "_monitorMenuItem";
+            _monitorMenuItem.Size = new System.Drawing.Size(273, 24);
+            _monitorMenuItem.Text = @"Monitor";
+            _monitorMenuItem.Click += OnMonitorViewMenuClick;
             //
             // tsmnuSeparator2
             //
-            this._menuSeparator2.Name = "_menuSeparator2";
-            this._menuSeparator2.Size = new System.Drawing.Size(270, 6);
+            _menuSeparator2.Name = "_menuSeparator2";
+            _menuSeparator2.Size = new System.Drawing.Size(270, 6);
             //
             // tsmnuConfig
             //
-            this._configurationMenuItem.Name = "_configurationMenuItem";
-            this._configurationMenuItem.Size = new System.Drawing.Size(273, 24);
-            this._configurationMenuItem.Text = "Settings";
-            this._configurationMenuItem.Click += this.OnConfigurationMenuClick;
+            _configurationMenuItem.Name = "_configurationMenuItem";
+            _configurationMenuItem.Size = new System.Drawing.Size(273, 24);
+            _configurationMenuItem.Text = @"Settings";
+            _configurationMenuItem.Click += OnConfigurationMenuClick;
             //
             // _aboutMenuItem
             //
-            this._aboutMenuItem.Name = "_aboutMenuItem";
-            this._aboutMenuItem.Size = new System.Drawing.Size(273, 24);
-            this._aboutMenuItem.Text = "About";
-            this._aboutMenuItem.Click += this.OnAboutMenuClick;
+            _aboutMenuItem.Name = "_aboutMenuItem";
+            _aboutMenuItem.Size = new System.Drawing.Size(273, 24);
+            _aboutMenuItem.Text = @"About";
+            _aboutMenuItem.Click += OnAboutMenuClick;
             //
             // tsmnuSeparator3
             //
-            this._menuSeparator3.Name = "_menuSeparator3";
-            this._menuSeparator3.Size = new System.Drawing.Size(270, 6);
+            _menuSeparator3.Name = "_menuSeparator3";
+            _menuSeparator3.Size = new System.Drawing.Size(270, 6);
             //
             // tsmnuExit
             //
-            this._exitMenuItem.Name = "_exitMenuItem";
-            this._exitMenuItem.Size = new System.Drawing.Size(273, 24);
-            this._exitMenuItem.Text = "Exit";
-            this._exitMenuItem.Click += this.OnExitMenuClick;
+            _exitMenuItem.Name = "_exitMenuItem";
+            _exitMenuItem.Size = new System.Drawing.Size(273, 24);
+            _exitMenuItem.Text = @"Exit";
+            _exitMenuItem.Click += OnExitMenuClick;
             // Last
-            this._mainMenu.ResumeLayout(false);
+            _mainMenu.ResumeLayout(false);
+        }
+
+        private void ConfigureComponents()
+        {
+            var currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            _trayIcon.BalloonTipText = $@"Version {currentVersion}";
+            _trayIcon.Text = $@"{DefaultTooltipTitle}{Environment.NewLine}Version {currentVersion}";
+            // Add scenarios to menu
+            var scenarios = _context.Scenarios?.ToList() ?? new List<Scenario>();
+            if (scenarios.Count > 0)
+            {
+                foreach (var scenario in scenarios.Where(s => (s?.IsActive ?? false) && !string.IsNullOrEmpty(s.Name)))
+                {
+                    _dynamicMenuItems.Add(scenario.Guid.ToString(), CreateToolStripMenuItem(scenario.Name, scenario.Guid, false));
+                    _mainMenu.Items.Add(_dynamicMenuItems[scenario.Guid.ToString()]);
+                }
+                _mainMenu.Items.Add(_menuSeparator0);
+            }
+            // Add shortcut tasks to menu
+            var tasks = _context.Tasks?.ToList() ?? new List<AppTask>();
+            if (tasks.Count > 0)
+            {
+                foreach (var task in tasks.Where(t => (t?.IsActive ?? false) && !string.IsNullOrEmpty(t.Name) && t.IsShortcut))
+                {
+                    _dynamicMenuItems.Add(task.Guid.ToString(), CreateToolStripMenuItem(task.Name, task.Guid, true));
+                    _mainMenu.Items.Add(_dynamicMenuItems[task.Guid.ToString()]);
+                }
+                _mainMenu.Items.Add(_menuSeparator1);
+            }
+            // Add menu fixed items
+            _mainMenu.Items.AddRange(new ToolStripItem[] {
+            _monitorMenuItem,
+            _menuSeparator2,
+            _configurationMenuItem,
+            _aboutMenuItem,
+            _menuSeparator3,
+            _exitMenuItem});
         }
 
         private void ShowMonitorWindow()
@@ -233,19 +226,6 @@ namespace Adeotek.DevToolbox.Common
             }
         }
 
-        private void OnRestartMenuClick(object sender, EventArgs e)
-        {
-            // _eventAggregator.PublishOnCurrentThreadAsync(new WorkersManagerControlEventArgs { Action = WorkersManagerActions.Restart });
-            try
-            {
-                // do work
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "OnRestartMenuClick exception");
-            }
-        }
-
         private void OnAboutMenuClick(object sender, EventArgs e)
         {
             if (_splashScreen == null || _splashScreen.IsDisposed)
@@ -257,11 +237,6 @@ namespace Adeotek.DevToolbox.Common
             {
                 _splashScreen.Activate();
             }
-        }
-
-        private void OnTestingMenuClick(object sender, EventArgs e)
-        {
-            
         }
 
         private void OnExitMenuClick(object sender, EventArgs e)
@@ -295,30 +270,65 @@ namespace Adeotek.DevToolbox.Common
             switch (e.Level.ToUpper())
             {
                 case "ERROR":
-                    MessageBox.Show($@"{e.Message}{Environment.NewLine}{e.Exception?.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($@"{e.Message}{Environment.NewLine}{e.Exception?.Message}", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case "WARNING":
-                    MessageBox.Show(e.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(e.Message, @"Warning", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 default:
-                    MessageBox.Show(e.Message, "Information", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(e.Message, @"Information", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
-        }
-
-        private void OnGoOfflineMenuClick(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void OnGoOnlineMenuClick(object sender, EventArgs e)
-        {
-            
         }
         
         private void OnApplicationClosingHandle(ApplicationClosingEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void OnRunScenarioClick(object sender, EventArgs e)
+        {
+            // _eventAggregator.PublishOnCurrentThreadAsync(new WorkersManagerControlEventArgs { Action = WorkersManagerActions.Restart });
+            try
+            {
+                // do work
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "OnRestartMenuClick exception");
+            }
+        }
+
+        private void OnRunTaskClick(object sender, EventArgs e)
+        {
+            // _eventAggregator.PublishOnCurrentThreadAsync(new WorkersManagerControlEventArgs { Action = WorkersManagerActions.Restart });
+            try
+            {
+                // do work
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "OnRestartMenuClick exception");
+            }
+        }
+
+        private ToolStripMenuItem CreateToolStripMenuItem(string text, Guid guid, bool isTask)
+        {
+            var result = new ToolStripMenuItem
+            {
+                Name = guid.ToString(),
+                Text = text,
+                Size = new System.Drawing.Size(273, 24)
+            };
+            if (isTask)
+            {
+                result.Click += OnRunTaskClick;
+            }
+            else
+            {
+                result.Click += OnRunScenarioClick;
+            }
+            return result;
         }
     }
 }

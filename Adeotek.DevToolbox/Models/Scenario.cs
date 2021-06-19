@@ -8,7 +8,6 @@ namespace Adeotek.DevToolbox.Models
         public Guid Guid { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
-        public bool IsShortcut { get; set; }
         public List<Guid> Tasks { get; set; }
     }
 }
