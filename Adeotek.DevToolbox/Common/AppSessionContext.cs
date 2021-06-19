@@ -170,7 +170,14 @@ namespace Adeotek.DevToolbox.Common
             switch (e.Type)
             {
                 case RunActionTypes.Scenario:
-                    ExecuteScenario(e.TargetGuid);
+                    if (e.Default)
+                    {
+                        ExecuteDefaultScenario();
+                    }
+                    else
+                    {
+                        ExecuteScenario(e.TargetGuid);
+                    }
                     break;
                 case RunActionTypes.Task:
                     if (e.All)

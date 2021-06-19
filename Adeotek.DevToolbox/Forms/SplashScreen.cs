@@ -10,7 +10,7 @@ namespace Adeotek.DevToolbox.Forms
         {
             InitializeComponent();
             TitleLabel.Text = "AdeoTEK DEV Toolbox";
-            SubTitleLabel.Text = "Developers Toolbox";
+            SubTitleLabel.Text = "Open Source Developers Toolbox";
             VersionLabel.Text = $"Version: {Assembly.GetExecutingAssembly().GetName().Version}";
             MessageLabel.Text = "Initializing application...";
             CloseButton.Text = "Close";
