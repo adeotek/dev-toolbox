@@ -16,6 +16,7 @@ namespace Adeotek.DevToolbox.Forms
     public partial class AppConfigurationWindow : Form
     {
         private const string RegistryRunPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+        private const string X64RegistryRunPath = @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run";
         private const string RegistryValueKey = "AdeoTEK DEV Toolbox";
         private readonly AppSessionContext _context;
         private readonly EventsAggregator _eventsAggregator;
@@ -313,15 +314,10 @@ namespace Adeotek.DevToolbox.Forms
         {
             try
             {
-                var key = Registry.CurrentUser.OpenSubKey(RegistryRunPath, true);
-                if (key == null)
-                {
-                    throw new Exception($@"Invalid registry key: [Computer\HKEY_CURRENT_USER\{RegistryRunPath}]");
-                }
-
+                var key = GetStartUpRegistryKey(true);
                 if (value)
                 {
-                    key.SetValue(RegistryValueKey, Application.ExecutablePath);
+                    key.SetValue(RegistryValueKey, $"\"{Application.ExecutablePath}\"");
                 }
                 else if (key.GetValue(RegistryValueKey) != null)
                 {
@@ -338,12 +334,7 @@ namespace Adeotek.DevToolbox.Forms
         {
             try
             {
-                var key = Registry.CurrentUser.OpenSubKey(RegistryRunPath, true);
-                if (key == null)
-                {
-                    throw new Exception($@"Invalid registry key: [Computer\HKEY_CURRENT_USER\{RegistryRunPath}]");
-                }
-
+                var key = GetStartUpRegistryKey();
                 var value = key.GetValue(RegistryValueKey);
                 return Application.ExecutablePath.Equals(value?.ToString() ?? string.Empty, StringComparison.InvariantCultureIgnoreCase);
             }
@@ -353,6 +344,18 @@ namespace Adeotek.DevToolbox.Forms
                 MessageBox.Show($@"LoadRunAtLogin exception: {e.Message}");
                 return false;
             }
+        }
+
+        private RegistryKey GetStartUpRegistryKey(bool writable = false)
+        {
+            var x64Key = Registry.LocalMachine.OpenSubKey(X64RegistryRunPath ,writable);
+            var key = x64Key ?? Registry.CurrentUser.OpenSubKey(RegistryRunPath, writable);
+            if (key == null)
+            {
+                throw new Exception($@"Invalid registry key: [{RegistryRunPath}]");
+            }
+
+            return key;
         }
         #endregion
     }
