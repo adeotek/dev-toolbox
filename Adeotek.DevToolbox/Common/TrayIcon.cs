@@ -323,6 +323,7 @@ namespace Adeotek.DevToolbox.Common
             if (isTask)
             {
                 result.Click += OnRunTaskClick;
+                result.Font = new System.Drawing.Font(result.Font.FontFamily, result.Font.Size, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             }
             else
             {

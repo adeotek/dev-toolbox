@@ -8,9 +8,9 @@ namespace Adeotek.DevToolbox.Models
     {
         public Guid Guid { get; set; }
         public string Name { get; set; }
+        public string Type { get; set; }
         public bool IsActive { get; set; }
         public bool IsShortcut { get; set; }
-        public string Type { get; set; }
         public Dictionary<string, string> Arguments { get; set; }
 
         public AppTask()
@@ -20,5 +20,7 @@ namespace Adeotek.DevToolbox.Models
         
         [JsonIgnore]
         public TaskTypes TypeAsEnum => string.IsNullOrEmpty(Type) ? TaskTypes.Undefined : Enum.Parse<TaskTypes>(Type);
+        [JsonIgnore]
+        public string EditButtonText { get; set; } = "...";
     }
 }
