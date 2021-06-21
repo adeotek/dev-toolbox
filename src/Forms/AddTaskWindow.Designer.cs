@@ -40,6 +40,7 @@ namespace Adeotek.DevToolbox.Forms
             this.CloseButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
             this.ArgumentsDataGridView = new System.Windows.Forms.DataGridView();
+            this.TypeTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.ArgumentsDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -167,12 +168,25 @@ namespace Adeotek.DevToolbox.Forms
             this.ArgumentsDataGridView.Size = new System.Drawing.Size(336, 227);
             this.ArgumentsDataGridView.TabIndex = 22;
             // 
+            // TypeTextBox
+            // 
+            this.TypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TypeTextBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.TypeTextBox.Location = new System.Drawing.Point(13, 27);
+            this.TypeTextBox.Name = "TypeTextBox";
+            this.TypeTextBox.ReadOnly = true;
+            this.TypeTextBox.Size = new System.Drawing.Size(337, 23);
+            this.TypeTextBox.TabIndex = 23;
+            this.TypeTextBox.Visible = false;
+            // 
             // AddTaskWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(361, 450);
+            this.Controls.Add(this.TypeTextBox);
             this.Controls.Add(this.ArgumentsDataGridView);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.SaveButton);
@@ -184,8 +198,10 @@ namespace Adeotek.DevToolbox.Forms
             this.Controls.Add(this.NameTextBox);
             this.Controls.Add(this.DefaultScenarioLabel);
             this.Controls.Add(this.TypeComboBox);
+            this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(377, 489);
             this.Name = "AddTaskWindow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Add Task";
             ((System.ComponentModel.ISupportInitialize)(this.ArgumentsDataGridView)).EndInit();
             this.ResumeLayout(false);
@@ -206,5 +222,6 @@ namespace Adeotek.DevToolbox.Forms
         private System.Windows.Forms.Button CloseButton;
         private System.Windows.Forms.Button SaveButton;
         private System.Windows.Forms.DataGridView ArgumentsDataGridView;
+        private System.Windows.Forms.TextBox TypeTextBox;
     }
 }

@@ -154,7 +154,8 @@ namespace Adeotek.DevToolbox.Common
             {
                 foreach (var scenario in scenarios.Where(s => (s?.IsActive ?? false) && !string.IsNullOrEmpty(s.Name)))
                 {
-                    _dynamicMenuItems.Add(scenario.Guid.ToString(), CreateToolStripMenuItem(scenario.Name, scenario.Guid, false));
+                    var scenarioName = scenario.Name + (scenario.Guid == _context.DefaultScenario ? "*" : "");
+                    _dynamicMenuItems.Add(scenario.Guid.ToString(), CreateToolStripMenuItem(scenarioName, scenario.Guid, false));
                     _mainMenu.Items.Add(_dynamicMenuItems[scenario.Guid.ToString()]);
                 }
                 _mainMenu.Items.Add(_menuSeparator0);
@@ -288,10 +289,14 @@ namespace Adeotek.DevToolbox.Common
 
         private void OnRunScenarioClick(object sender, EventArgs e)
         {
-            // _eventAggregator.PublishOnCurrentThreadAsync(new WorkersManagerControlEventArgs { Action = WorkersManagerActions.Restart });
             try
             {
-                // do work
+                var guid = Guid.Parse(((ToolStripMenuItem) sender).Name);
+                if (guid == Guid.Empty)
+                {
+                    return;
+                }
+                _context.ExecuteScenario(guid);
             }
             catch (Exception ex)
             {
@@ -301,10 +306,14 @@ namespace Adeotek.DevToolbox.Common
 
         private void OnRunTaskClick(object sender, EventArgs e)
         {
-            // _eventAggregator.PublishOnCurrentThreadAsync(new WorkersManagerControlEventArgs { Action = WorkersManagerActions.Restart });
             try
             {
-                // do work
+                var guid = Guid.Parse(((ToolStripMenuItem)sender).Name);
+                if (guid == Guid.Empty)
+                {
+                    return;
+                }
+                _context.ExecuteTask(guid);
             }
             catch (Exception ex)
             {

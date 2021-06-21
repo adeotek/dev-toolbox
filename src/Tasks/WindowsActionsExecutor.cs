@@ -35,6 +35,11 @@ namespace Adeotek.DevToolbox.Tasks
                 throw new ApplicationAlreadyRunningException(processName);
             }
 
+            if (executable.Contains("%userprofile%", StringComparison.InvariantCultureIgnoreCase))
+            {
+                executable = executable.Replace("%userprofile%", Environment.GetEnvironmentVariable("userprofile"));
+            }
+
             var enumerable = args == null ? Array.Empty<string>() : args as string[] ?? args.ToArray();
             if (!enumerable.Any())
             {

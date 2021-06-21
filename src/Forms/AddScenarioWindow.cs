@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Text.Json;
 using System.Windows.Forms;
 using Adeotek.DevToolbox.Common;
@@ -16,6 +19,7 @@ namespace Adeotek.DevToolbox.Forms
         private readonly AppSessionContext _context;
         private readonly ILogger _logger;
         private readonly Scenario _scenario;
+        private readonly List<ScenarioTask> _scenarioTasks;
         private readonly bool _isEdit;
         
         public AddScenarioWindow(
@@ -40,7 +44,27 @@ namespace Adeotek.DevToolbox.Forms
                 _isEdit = true;
                 _scenario = scenario;
             }
-            
+
+            NameTextBox.Text = _scenario.Name;
+            IsActiveCheckBox.Checked = _scenario.IsActive;
+
+            _scenarioTasks = (from t in _context.Tasks
+                join s in _scenario.Tasks on t.Guid equals s into stj
+                from st in stj.DefaultIfEmpty()
+                select new ScenarioTask
+                {
+                    Guid = t.Guid,
+                    Name = t.Name,
+                    IsSelected = st != Guid.Empty
+                }).ToList();
+            var bindingList = new BindingList<ScenarioTask>(_scenarioTasks);
+            TasksDataGridView.DataSource = bindingList;
+            TasksDataGridView.AllowUserToResizeColumns = true;
+            TasksDataGridView.Columns[0].Visible = false;
+            TasksDataGridView.Columns[1].MinimumWidth = 160;
+            TasksDataGridView.Columns[1].Resizable = DataGridViewTriState.True;
+            TasksDataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            TasksDataGridView.Columns[2].Resizable = DataGridViewTriState.False;
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -53,7 +77,10 @@ namespace Adeotek.DevToolbox.Forms
             
             _scenario.Name = NameTextBox.Text;
             _scenario.IsActive = IsActiveCheckBox.Checked;
-            
+            _scenario.Tasks = new List<Guid>();
+            _scenarioTasks.Where(t => t.IsSelected).ToList()
+                .ForEach(t => _scenario.Tasks.Add(t.Guid));
+
             var onSaveArgs = new SaveScenarioEventArgs
             {
                 Data = _scenario,

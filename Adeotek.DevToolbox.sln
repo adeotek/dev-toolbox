@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adeotek.DevToolbox", "Adeotek.DevToolbox\Adeotek.DevToolbox.csproj", "{D45FE456-F2D0-4495-AE50-A1C5D62634E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adeotek.DevToolbox", "src\Adeotek.DevToolbox.csproj", "{D45FE456-F2D0-4495-AE50-A1C5D62634E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

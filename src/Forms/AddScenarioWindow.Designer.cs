@@ -35,7 +35,8 @@ namespace Adeotek.DevToolbox.Forms
             this.IsActiveCheckBox = new System.Windows.Forms.CheckBox();
             this.CloseButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
-            this.TasksCheckedListBox = new System.Windows.Forms.CheckedListBox();
+            this.TasksDataGridView = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.TasksDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // NameTextBox
@@ -45,7 +46,7 @@ namespace Adeotek.DevToolbox.Forms
             this.NameTextBox.BackColor = System.Drawing.SystemColors.Info;
             this.NameTextBox.Location = new System.Drawing.Point(12, 27);
             this.NameTextBox.Name = "NameTextBox";
-            this.NameTextBox.Size = new System.Drawing.Size(252, 23);
+            this.NameTextBox.Size = new System.Drawing.Size(320, 23);
             this.NameTextBox.TabIndex = 12;
             // 
             // label1
@@ -84,7 +85,7 @@ namespace Adeotek.DevToolbox.Forms
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CloseButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.CloseButton.Location = new System.Drawing.Point(119, 357);
+            this.CloseButton.Location = new System.Drawing.Point(119, 436);
             this.CloseButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(100, 23);
@@ -97,7 +98,7 @@ namespace Adeotek.DevToolbox.Forms
             // 
             this.SaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SaveButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.SaveButton.Location = new System.Drawing.Point(13, 357);
+            this.SaveButton.Location = new System.Drawing.Point(13, 436);
             this.SaveButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(100, 23);
@@ -106,34 +107,40 @@ namespace Adeotek.DevToolbox.Forms
             this.SaveButton.UseVisualStyleBackColor = false;
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
-            // TasksCheckedListBox
+            // TasksDataGridView
             // 
-            this.TasksCheckedListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.TasksDataGridView.AllowUserToAddRows = false;
+            this.TasksDataGridView.AllowUserToDeleteRows = false;
+            this.TasksDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TasksCheckedListBox.BackColor = System.Drawing.SystemColors.Info;
-            this.TasksCheckedListBox.FormattingEnabled = true;
-            this.TasksCheckedListBox.Location = new System.Drawing.Point(13, 100);
-            this.TasksCheckedListBox.Name = "TasksCheckedListBox";
-            this.TasksCheckedListBox.Size = new System.Drawing.Size(252, 238);
-            this.TasksCheckedListBox.TabIndex = 22;
+            this.TasksDataGridView.BackgroundColor = System.Drawing.SystemColors.Info;
+            this.TasksDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.TasksDataGridView.Location = new System.Drawing.Point(12, 100);
+            this.TasksDataGridView.Name = "TasksDataGridView";
+            this.TasksDataGridView.RowTemplate.Height = 25;
+            this.TasksDataGridView.Size = new System.Drawing.Size(320, 306);
+            this.TasksDataGridView.TabIndex = 23;
             // 
             // AddScenarioWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(276, 392);
-            this.Controls.Add(this.TasksCheckedListBox);
+            this.ClientSize = new System.Drawing.Size(344, 471);
+            this.Controls.Add(this.TasksDataGridView);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.ActiveLabel);
             this.Controls.Add(this.IsActiveCheckBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.NameTextBox);
-            this.MinimumSize = new System.Drawing.Size(292, 431);
+            this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(300, 430);
             this.Name = "AddScenarioWindow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Add Scenario";
+            ((System.ComponentModel.ISupportInitialize)(this.TasksDataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -146,6 +153,6 @@ namespace Adeotek.DevToolbox.Forms
         private System.Windows.Forms.CheckBox IsActiveCheckBox;
         private System.Windows.Forms.Button CloseButton;
         private System.Windows.Forms.Button SaveButton;
-        private System.Windows.Forms.CheckedListBox TasksCheckedListBox;
+        private System.Windows.Forms.DataGridView TasksDataGridView;
     }
 }

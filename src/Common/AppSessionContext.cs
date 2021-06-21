@@ -278,7 +278,7 @@ namespace Adeotek.DevToolbox.Common
             {
                 throw new NotImplementedException();
                 
-                ExecuteTask(Guid.Parse("539db734-89d0-440a-a4b2-adb471c8c004"));
+                // ExecuteTask(Guid.Parse("539db734-89d0-440a-a4b2-adb471c8c004"));
 
                 // _windowsActionsExecutor.ExecuteCommand("wsl.exe", $"-d {task.Name} hostname -I");
                 // _windowsActionsExecutor.ExecuteCommand("cmd", $"/C dir {Environment.GetEnvironmentVariable("windir")}");

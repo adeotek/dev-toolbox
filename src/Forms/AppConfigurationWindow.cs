@@ -118,7 +118,7 @@ namespace Adeotek.DevToolbox.Forms
 
             try
             {
-                var guid = (Guid) TasksDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                var guid = (Guid) TasksDataGridView.Rows[e.RowIndex].Cells[0].Value;
                 var task = _tasks.FirstOrDefault(t => t.Guid == guid);
                 ShowAddTaskWindow(task);
             }
@@ -137,7 +137,7 @@ namespace Adeotek.DevToolbox.Forms
             
             try
             {
-                var guid = (Guid) ScenariosDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                var guid = (Guid) ScenariosDataGridView.Rows[e.RowIndex].Cells[0].Value;
                 var scenario = _scenarios.FirstOrDefault(s => s.Guid == guid);
                 ShowAddScenarioWindow(scenario);
             }

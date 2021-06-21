@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.Json;
 using System.Windows.Forms;
@@ -37,6 +38,7 @@ namespace Adeotek.DevToolbox.Forms
                 TypeComboBox.ValueMember = "Value";
                 TypeComboBox.DisplayMember = "Name";
                 TypeComboBox.SelectedValue = _task.Type ?? "Null";
+                TypeTextBox.Visible = false;
             }
             else
             {
@@ -49,12 +51,22 @@ namespace Adeotek.DevToolbox.Forms
                 }).ToList();
                 
                 TypeComboBox.Visible = false;
+                TypeTextBox.ReadOnly = true;
+                TypeTextBox.Visible = true;
+                TypeTextBox.Text = task.Type;
             }
 
             NameTextBox.Text = _task.Name;
             IsActiveCheckBox.Checked = _task.IsActive;
             IsShortcutCheckBox.Checked = _task.IsShortcut;
-            ArgumentsDataGridView.DataSource = _arguments;
+
+            var bindingList = new BindingList<Argument>(_arguments);
+            ArgumentsDataGridView.DataSource = bindingList;
+            ArgumentsDataGridView.AllowUserToResizeColumns = true;
+            ArgumentsDataGridView.Columns[0].MinimumWidth = 140;
+            ArgumentsDataGridView.Columns[0].Resizable = DataGridViewTriState.True;
+            ArgumentsDataGridView.Columns[1].MinimumWidth = 140;
+            ArgumentsDataGridView.Columns[1].Resizable = DataGridViewTriState.True;
         }
         
         private void SaveButton_Click(object sender, EventArgs e)
