@@ -37,7 +37,7 @@ namespace Adeotek.DevToolbox.Tasks
 
             if (executable.Contains("%userprofile%", StringComparison.InvariantCultureIgnoreCase))
             {
-                executable = executable.Replace("%userprofile%", Environment.GetEnvironmentVariable("userprofile"));
+                executable = executable.Replace("%userprofile%", Environment.GetEnvironmentVariable("userprofile"), StringComparison.CurrentCultureIgnoreCase);
             }
 
             var enumerable = args == null ? Array.Empty<string>() : args as string[] ?? args.ToArray();

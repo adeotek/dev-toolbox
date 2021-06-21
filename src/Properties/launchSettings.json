@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Adeotek.DevToolbox": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Developer"
+      }
+    }
+  }
+}
