@@ -317,7 +317,7 @@ namespace Adeotek.DevToolbox.Forms
                 var key = GetStartUpRegistryKey(true);
                 if (value)
                 {
-                    key.SetValue(RegistryValueKey, Application.ExecutablePath);
+                    key.SetValue(RegistryValueKey, $"\"{Application.ExecutablePath}\"");
                 }
                 else if (key.GetValue(RegistryValueKey) != null)
                 {
