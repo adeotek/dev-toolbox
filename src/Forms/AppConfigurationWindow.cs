@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -21,10 +22,12 @@ namespace Adeotek.DevToolbox.Forms
         private readonly AppSessionContext _context;
         private readonly EventsAggregator _eventsAggregator;
         private readonly ILogger _logger;
-        private List<AppTask> _tasks;
-        private List<Scenario> _scenarios;
+        private BindingList<AppTask> _tasks;
+        private BindingList<Scenario> _scenarios;
         private AddScenarioWindow _scenarioWindow;
         private AddTaskWindow _taskWindow;
+        private AddStartServiceTaskWindow _startServiceTaskWindow;
+        private AddStartAppTaskWindow _startAppTaskWindow;
 
         public AppConfigurationWindow(
             AppSessionContext context,
@@ -45,9 +48,9 @@ namespace Adeotek.DevToolbox.Forms
             {
                 var appConfiguration = LoadConfigurationData();
                 // Tasks
-                _tasks = appConfiguration.Tasks ?? new List<AppTask>();
+                _tasks = new BindingList<AppTask>(appConfiguration.Tasks ?? new List<AppTask>());
                 // Scenarios
-                _scenarios = appConfiguration.Scenarios ?? new List<Scenario>();
+                _scenarios = new BindingList<Scenario>(appConfiguration.Scenarios ?? new List<Scenario>());
                 // General
                 AutoRunAtLoginCheckBox.Checked = LoadRunAtLogin();
                 AutoRunDefaultScenarioCheckBox.Checked = appConfiguration.RunDefaultScenarioOnStartup;
@@ -70,12 +73,19 @@ namespace Adeotek.DevToolbox.Forms
                 TasksDataGridView.Columns["Arguments"].Visible = false;
                 TasksDataGridView.Columns["TypeAsEnum"].Visible = false;
                 TasksDataGridView.Columns["EditButtonText"].Visible = false;
-                TasksDataGridView.Columns.Add(new DataGridViewButtonColumn
+                TasksDataGridView.Columns.Insert(0, new DataGridViewButtonColumn
                 {
                     Name = "TaskEditButton",
-                    HeaderText = @"...",
+                    HeaderText = "",
                     DataPropertyName = "EditButtonText",
-                    AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                });
+                TasksDataGridView.Columns.Add(new DataGridViewButtonColumn
+                {
+                    Name = "TaskDeleteButton",
+                    HeaderText = "",
+                    DataPropertyName = "DeleteButtonText",
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
                 });
                 // Scenarios
                 ScenariosDataGridView.DataSource = _scenarios;
@@ -84,12 +94,19 @@ namespace Adeotek.DevToolbox.Forms
                 ScenariosDataGridView.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
                 ScenariosDataGridView.Columns["IsActive"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
                 ScenariosDataGridView.Columns["EditButtonText"].Visible = false;
-                ScenariosDataGridView.Columns.Add(new DataGridViewButtonColumn
+                ScenariosDataGridView.Columns.Insert(0, new DataGridViewButtonColumn
                 {
                     Name = "ScenarioEditButton",
-                    HeaderText = @"...",
+                    HeaderText = "",
                     DataPropertyName = "EditButtonText",
-                    AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                });
+                ScenariosDataGridView.Columns.Add(new DataGridViewButtonColumn
+                {
+                    Name = "ScenarioDeleteButton",
+                    HeaderText = "",
+                    DataPropertyName = "DeleteButtonText",
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
                 });
             }
             catch (Exception e)
@@ -100,28 +117,82 @@ namespace Adeotek.DevToolbox.Forms
             }
         }
 
-        private void AddTaskButton_Click(object sender, EventArgs e)
+        private void AddTaskButtonClick(object sender, EventArgs e)
         {
-            ShowAddTaskWindow();
+            try
+            {
+                ShowAddTaskWindow(TaskTypes.Undefined);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "AddTaskButtonClick exception: {Message}", ex.Message);
+                MessageBox.Show($@"Error: {ex.Message}");
+            }
         }
 
-        private void AddScenarioButton_Click(object sender, EventArgs e)
+        private void AddAppStartTaskButtonClick(object sender, EventArgs e)
         {
-            ShowAddScenarioWindow();
+            try
+            {
+                ShowAddTaskWindow(TaskTypes.StartApp);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "AddAppStartTaskButtonClick exception: {Message}", ex.Message);
+                MessageBox.Show($@"Error: {ex.Message}");
+            }
+        }
+
+        private void AddServiceStartTaskButtonClick(object sender, EventArgs e)
+        {
+            try
+            {
+                ShowAddTaskWindow(TaskTypes.StartService);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "AddServiceStartTaskButtonClick exception: {Message}", ex.Message);
+                MessageBox.Show($@"Error: {ex.Message}");
+            }
+        }
+
+        private void AddScenarioButtonClick(object sender, EventArgs e)
+        {
+            try
+            {
+                ShowAddScenarioWindow();
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "AddScenarioButtonClick exception: {Message}", ex.Message);
+                MessageBox.Show($@"Error: {ex.Message}");
+            }
         }
 
         private void TasksDataGridViewCellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (TasksDataGridView.Columns[e.ColumnIndex].Name != "TaskEditButton")
+            if (e.ColumnIndex < 0)
             {
                 return;
             }
 
             try
             {
-                var guid = (Guid) TasksDataGridView.Rows[e.RowIndex].Cells[0].Value;
+                var action = TasksDataGridView.Columns[e.ColumnIndex].Name;
+                if (action == "TaskDeleteButton")
+                {
+                    TasksDataGridView.Rows.RemoveAt(e.RowIndex);
+                    return;
+                }
+
+                if (action != "TaskEditButton")
+                {
+                    return;
+                }
+
+                var guid = (Guid)TasksDataGridView.Rows[e.RowIndex].Cells[0].Value;
                 var task = _tasks.FirstOrDefault(t => t.Guid == guid);
-                ShowAddTaskWindow(task);
+                ShowAddTaskWindow(task?.TypeAsEnum ?? TaskTypes.Custom, task);
             }
             catch (Exception ex)
             {
@@ -131,13 +202,25 @@ namespace Adeotek.DevToolbox.Forms
 
         private void ScenariosDataGridViewCellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (ScenariosDataGridView.Columns[e.ColumnIndex].Name != "ScenarioEditButton")
+            if (e.ColumnIndex < 0)
             {
                 return;
             }
             
             try
             {
+                var action = ScenariosDataGridView.Columns[e.ColumnIndex].Name;
+                if (action == "ScenarioDeleteButton")
+                {
+                    ScenariosDataGridView.Rows.RemoveAt(e.RowIndex);
+                    return;
+                }
+
+                if (action != "ScenarioEditButton")
+                {
+                    return;
+                }
+
                 var guid = (Guid) ScenariosDataGridView.Rows[e.RowIndex].Cells[0].Value;
                 var scenario = _scenarios.FirstOrDefault(s => s.Guid == guid);
                 ShowAddScenarioWindow(scenario);
@@ -148,22 +231,61 @@ namespace Adeotek.DevToolbox.Forms
             }
         }
 
-        private void ShowAddTaskWindow(AppTask task = null)
+        private void ShowAddTaskWindow(TaskTypes type, AppTask task = null)
         {
-            if (_taskWindow == null || _taskWindow.IsDisposed)
+            switch (type)
             {
-                _taskWindow = new AddTaskWindow(task, _logger);
-                _taskWindow.OnSave += OnTaskSaveHandle;
-                _taskWindow.Show();
-            }
-            else
-            {
-                if (_taskWindow.WindowState != FormWindowState.Normal &&
-                    _taskWindow.WindowState != FormWindowState.Maximized)
-                {
-                    _taskWindow.WindowState = FormWindowState.Normal;
-                }
-                _taskWindow.Activate();
+                case TaskTypes.StartApp:
+                    if (_startAppTaskWindow == null || _startAppTaskWindow.IsDisposed)
+                    {
+                        _startAppTaskWindow = new AddStartAppTaskWindow(task, _logger);
+                        _startAppTaskWindow.OnSave += OnTaskSaveHandle;
+                        _startAppTaskWindow.Show();
+                    }
+                    else
+                    {
+                        if (_startAppTaskWindow.WindowState != FormWindowState.Normal &&
+                            _startAppTaskWindow.WindowState != FormWindowState.Maximized)
+                        {
+                            _startAppTaskWindow.WindowState = FormWindowState.Normal;
+                        }
+                        _startAppTaskWindow.Activate();
+                    }
+                    break;
+                case TaskTypes.StartService:
+                    if (_startServiceTaskWindow == null || _startServiceTaskWindow.IsDisposed)
+                    {
+                        _startServiceTaskWindow = new AddStartServiceTaskWindow(task, _logger);
+                        _startServiceTaskWindow.OnSave += OnTaskSaveHandle;
+                        _startServiceTaskWindow.Show();
+                    }
+                    else
+                    {
+                        if (_startServiceTaskWindow.WindowState != FormWindowState.Normal &&
+                            _startServiceTaskWindow.WindowState != FormWindowState.Maximized)
+                        {
+                            _startServiceTaskWindow.WindowState = FormWindowState.Normal;
+                        }
+                        _startServiceTaskWindow.Activate();
+                    }
+                    break;
+                default:
+                    if (_taskWindow == null || _taskWindow.IsDisposed)
+                    {
+                        _taskWindow = new AddTaskWindow(task, _logger);
+                        _taskWindow.OnSave += OnTaskSaveHandle;
+                        _taskWindow.Show();
+                    }
+                    else
+                    {
+                        if (_taskWindow.WindowState != FormWindowState.Normal &&
+                            _taskWindow.WindowState != FormWindowState.Maximized)
+                        {
+                            _taskWindow.WindowState = FormWindowState.Normal;
+                        }
+                        _taskWindow.Activate();
+                    }
+                    break;
             }
         }
         
@@ -193,21 +315,25 @@ namespace Adeotek.DevToolbox.Forms
                 if (!e.IsEdit)
                 {
                     _tasks.Add(e.Data);
-                    return;
-                }
-                
-                var task = _tasks.FirstOrDefault(t => t.Guid == e.Data.Guid);
-                if (task == null)
-                {
-                    _tasks.Add(e.Data);
                 }
                 else
                 {
-                    task.Name = e.Data.Name;
-                    task.IsActive = e.Data.IsActive;
-                    task.IsShortcut = e.Data.IsShortcut;
-                    task.Arguments = e.Data.Arguments;
+                    var task = _tasks.FirstOrDefault(t => t.Guid == e.Data.Guid);
+                    if (task == null)
+                    {
+                        _tasks.Add(e.Data);
+                    }
+                    else
+                    {
+                        task.Name = e.Data.Name;
+                        task.IsActive = e.Data.IsActive;
+                        task.IsShortcut = e.Data.IsShortcut;
+                        task.Arguments = e.Data.Arguments;
+                    }
                 }
+
+                TasksDataGridView.Update();
+                TasksDataGridView.Refresh();
             }
             catch (Exception ex)
             {
@@ -223,20 +349,25 @@ namespace Adeotek.DevToolbox.Forms
                 if (!e.IsEdit)
                 {
                     _scenarios.Add(e.Data);
-                    return;
-                }
-
-                var scenario = _scenarios.FirstOrDefault(s => s.Guid == e.Data.Guid);
-                if (scenario == null)
-                {
-                    _scenarios.Add(e.Data);
                 }
                 else
                 {
-                    scenario.Name = e.Data.Name;
-                    scenario.IsActive = e.Data.IsActive;
-                    scenario.Tasks = e.Data.Tasks;
+                    var scenario = _scenarios.FirstOrDefault(s => s.Guid == e.Data.Guid);
+                    if (scenario == null)
+                    {
+                        _scenarios.Add(e.Data);
+                    }
+                    else
+                    {
+                        scenario.Name = e.Data.Name;
+                        scenario.IsActive = e.Data.IsActive;
+                        scenario.Tasks = e.Data.Tasks;
+                    }
                 }
+
+                ScenariosDataGridView.Update();
+                ScenariosDataGridView.Refresh();
+                
             }
             catch (Exception ex)
             {
@@ -245,7 +376,7 @@ namespace Adeotek.DevToolbox.Forms
             }
         }
 
-        private void SaveButton_Click(object sender, EventArgs e)
+        private void SaveButtonClick(object sender, EventArgs e)
         {
             _logger?.LogDebug("Save modified configuration...");
             try
@@ -262,7 +393,7 @@ namespace Adeotek.DevToolbox.Forms
             }
         }
 
-        private void CloseButton_Click(object sender, EventArgs e)
+        private void CloseButtonClick(object sender, EventArgs e)
         {
             Close();
         }
@@ -299,8 +430,8 @@ namespace Adeotek.DevToolbox.Forms
                 AutoOpenMonitor = AutoOpenMonitorCheckBox.Checked,
                 DefaultScenario = (Guid)(DefaultScenarioComboBox.SelectedValue ?? Guid.Empty),
                 Debug = DebugModeCheckBox.Checked,
-                Scenarios = _scenarios,
-                Tasks = _tasks
+                Scenarios = _scenarios.ToList(),
+                Tasks = _tasks.ToList()
             };
 
             jObject["Application"] = JObject.Parse(JsonConvert.SerializeObject(appConfiguration));

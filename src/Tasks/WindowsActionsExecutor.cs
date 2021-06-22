@@ -73,7 +73,7 @@ namespace Adeotek.DevToolbox.Tasks
                 ? new [] {task.Arguments["Arguments"]} 
                 : null;
             LaunchApp(executable, arguments, processName);
-            _logger.LogInformation("App launched {AppName} with args {Arguments}", task.Arguments.ContainsKey("ProcessName") ? task.Arguments["ProcessName"] : processName ?? executable, string.Join(" ", arguments ?? Array.Empty<string>()));
+            _logger.LogInformation("App launched {AppName} with args {Arguments}", processName ?? executable, string.Join(" ", arguments ?? Array.Empty<string>()));
         }
 
         public void StartWsl2(string distroName, string wslHostname)

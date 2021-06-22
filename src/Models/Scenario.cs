@@ -17,6 +17,8 @@ namespace Adeotek.DevToolbox.Models
         }
         
         [JsonIgnore]
-        public string EditButtonText { get; set; } = "...";
+        public string EditButtonText { get; set; } = "Edit";
+        [JsonIgnore]
+        public string DeleteButtonText { get; set; } = "Delete";
     }
 }

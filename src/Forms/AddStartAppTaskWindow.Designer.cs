@@ -1,7 +1,7 @@
 ﻿
 namespace Adeotek.DevToolbox.Forms
 {
-    partial class AddTaskWindow
+    partial class AddStartAppTaskWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,6 @@ namespace Adeotek.DevToolbox.Forms
         private void InitializeComponent()
         {
             this.DefaultScenarioLabel = new System.Windows.Forms.Label();
-            this.TypeComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.NameTextBox = new System.Windows.Forms.TextBox();
             this.ActiveLabel = new System.Windows.Forms.Label();
@@ -39,9 +38,17 @@ namespace Adeotek.DevToolbox.Forms
             this.IsShortcutCheckBox = new System.Windows.Forms.CheckBox();
             this.CloseButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
-            this.ArgumentsDataGridView = new System.Windows.Forms.DataGridView();
             this.TypeTextBox = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.ArgumentsDataGridView)).BeginInit();
+            this.label4 = new System.Windows.Forms.Label();
+            this.ExecutableTextBox = new System.Windows.Forms.TextBox();
+            this.ExecutableOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.SelectExecutableButton = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.ArgumentsTextBox = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.CheckIfRunningCheckBox = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.ProcessNameTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // DefaultScenarioLabel
@@ -50,20 +57,9 @@ namespace Adeotek.DevToolbox.Forms
             this.DefaultScenarioLabel.Location = new System.Drawing.Point(13, 9);
             this.DefaultScenarioLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.DefaultScenarioLabel.Name = "DefaultScenarioLabel";
-            this.DefaultScenarioLabel.Size = new System.Drawing.Size(61, 15);
+            this.DefaultScenarioLabel.Size = new System.Drawing.Size(56, 15);
             this.DefaultScenarioLabel.TabIndex = 13;
-            this.DefaultScenarioLabel.Text = "Task Type*";
-            // 
-            // TypeComboBox
-            // 
-            this.TypeComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TypeComboBox.BackColor = System.Drawing.SystemColors.Info;
-            this.TypeComboBox.FormattingEnabled = true;
-            this.TypeComboBox.Location = new System.Drawing.Point(12, 27);
-            this.TypeComboBox.Name = "TypeComboBox";
-            this.TypeComboBox.Size = new System.Drawing.Size(440, 23);
-            this.TypeComboBox.TabIndex = 12;
+            this.DefaultScenarioLabel.Text = "Task Type";
             // 
             // label1
             // 
@@ -82,7 +78,7 @@ namespace Adeotek.DevToolbox.Forms
             this.NameTextBox.BackColor = System.Drawing.SystemColors.Info;
             this.NameTextBox.Location = new System.Drawing.Point(12, 71);
             this.NameTextBox.Name = "NameTextBox";
-            this.NameTextBox.Size = new System.Drawing.Size(440, 23);
+            this.NameTextBox.Size = new System.Drawing.Size(340, 23);
             this.NameTextBox.TabIndex = 14;
             // 
             // ActiveLabel
@@ -133,7 +129,7 @@ namespace Adeotek.DevToolbox.Forms
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CloseButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.CloseButton.Location = new System.Drawing.Point(121, 416);
+            this.CloseButton.Location = new System.Drawing.Point(121, 376);
             this.CloseButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(100, 23);
@@ -146,7 +142,7 @@ namespace Adeotek.DevToolbox.Forms
             // 
             this.SaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SaveButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.SaveButton.Location = new System.Drawing.Point(13, 416);
+            this.SaveButton.Location = new System.Drawing.Point(13, 376);
             this.SaveButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(100, 23);
@@ -155,39 +151,133 @@ namespace Adeotek.DevToolbox.Forms
             this.SaveButton.UseVisualStyleBackColor = false;
             this.SaveButton.Click += new System.EventHandler(this.SaveButtonClick);
             // 
-            // ArgumentsDataGridView
-            // 
-            this.ArgumentsDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ArgumentsDataGridView.BackgroundColor = System.Drawing.SystemColors.Info;
-            this.ArgumentsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ArgumentsDataGridView.Location = new System.Drawing.Point(13, 170);
-            this.ArgumentsDataGridView.Name = "ArgumentsDataGridView";
-            this.ArgumentsDataGridView.RowTemplate.Height = 25;
-            this.ArgumentsDataGridView.Size = new System.Drawing.Size(439, 228);
-            this.ArgumentsDataGridView.TabIndex = 22;
-            // 
             // TypeTextBox
             // 
             this.TypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TypeTextBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.TypeTextBox.Location = new System.Drawing.Point(13, 27);
+            this.TypeTextBox.Location = new System.Drawing.Point(12, 27);
             this.TypeTextBox.Name = "TypeTextBox";
             this.TypeTextBox.ReadOnly = true;
-            this.TypeTextBox.Size = new System.Drawing.Size(440, 23);
+            this.TypeTextBox.Size = new System.Drawing.Size(340, 23);
             this.TypeTextBox.TabIndex = 23;
-            this.TypeTextBox.Visible = false;
             // 
-            // AddTaskWindow
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(13, 178);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(69, 15);
+            this.label4.TabIndex = 26;
+            this.label4.Text = "Executable*";
+            // 
+            // ExecutableTextBox
+            // 
+            this.ExecutableTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ExecutableTextBox.BackColor = System.Drawing.SystemColors.Info;
+            this.ExecutableTextBox.Location = new System.Drawing.Point(12, 196);
+            this.ExecutableTextBox.Name = "ExecutableTextBox";
+            this.ExecutableTextBox.Size = new System.Drawing.Size(307, 23);
+            this.ExecutableTextBox.TabIndex = 27;
+            // 
+            // ExecutableOpenFileDialog
+            // 
+            this.ExecutableOpenFileDialog.AddExtension = false;
+            this.ExecutableOpenFileDialog.RestoreDirectory = true;
+            // 
+            // SelectExecutableButton
+            // 
+            this.SelectExecutableButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.SelectExecutableButton.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.SelectExecutableButton.Location = new System.Drawing.Point(326, 196);
+            this.SelectExecutableButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.SelectExecutableButton.Name = "SelectExecutableButton";
+            this.SelectExecutableButton.Size = new System.Drawing.Size(26, 23);
+            this.SelectExecutableButton.TabIndex = 28;
+            this.SelectExecutableButton.Text = "...";
+            this.SelectExecutableButton.UseVisualStyleBackColor = false;
+            this.SelectExecutableButton.Click += new System.EventHandler(this.SelectExecutableButtonClick);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(13, 222);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(66, 15);
+            this.label5.TabIndex = 30;
+            this.label5.Text = "Arguments";
+            // 
+            // ArgumentsTextBox
+            // 
+            this.ArgumentsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ArgumentsTextBox.BackColor = System.Drawing.SystemColors.Info;
+            this.ArgumentsTextBox.Location = new System.Drawing.Point(12, 240);
+            this.ArgumentsTextBox.Name = "ArgumentsTextBox";
+            this.ArgumentsTextBox.Size = new System.Drawing.Size(340, 23);
+            this.ArgumentsTextBox.TabIndex = 29;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(13, 275);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(95, 15);
+            this.label6.TabIndex = 32;
+            this.label6.Text = "Check if running";
+            // 
+            // CheckIfRunningCheckBox
+            // 
+            this.CheckIfRunningCheckBox.AutoSize = true;
+            this.CheckIfRunningCheckBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.CheckIfRunningCheckBox.Location = new System.Drawing.Point(140, 275);
+            this.CheckIfRunningCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.CheckIfRunningCheckBox.Name = "CheckIfRunningCheckBox";
+            this.CheckIfRunningCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.CheckIfRunningCheckBox.Size = new System.Drawing.Size(15, 14);
+            this.CheckIfRunningCheckBox.TabIndex = 31;
+            this.CheckIfRunningCheckBox.UseVisualStyleBackColor = false;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(13, 301);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(80, 15);
+            this.label7.TabIndex = 34;
+            this.label7.Text = "Process name";
+            // 
+            // ProcessNameTextBox
+            // 
+            this.ProcessNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ProcessNameTextBox.BackColor = System.Drawing.SystemColors.Info;
+            this.ProcessNameTextBox.Location = new System.Drawing.Point(12, 319);
+            this.ProcessNameTextBox.Name = "ProcessNameTextBox";
+            this.ProcessNameTextBox.Size = new System.Drawing.Size(340, 23);
+            this.ProcessNameTextBox.TabIndex = 33;
+            // 
+            // AddStartAppTaskWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(464, 451);
+            this.ClientSize = new System.Drawing.Size(364, 411);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.ProcessNameTextBox);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.CheckIfRunningCheckBox);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.ArgumentsTextBox);
+            this.Controls.Add(this.SelectExecutableButton);
+            this.Controls.Add(this.ExecutableTextBox);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.TypeTextBox);
-            this.Controls.Add(this.ArgumentsDataGridView);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.label2);
@@ -197,13 +287,12 @@ namespace Adeotek.DevToolbox.Forms
             this.Controls.Add(this.label1);
             this.Controls.Add(this.NameTextBox);
             this.Controls.Add(this.DefaultScenarioLabel);
-            this.Controls.Add(this.TypeComboBox);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(380, 450);
             this.MinimumSize = new System.Drawing.Size(380, 450);
-            this.Name = "AddTaskWindow";
+            this.Name = "AddStartAppTaskWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Add Task";
-            ((System.ComponentModel.ISupportInitialize)(this.ArgumentsDataGridView)).EndInit();
+            this.Text = "Add StartApp Task";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -212,7 +301,6 @@ namespace Adeotek.DevToolbox.Forms
         #endregion
 
         private System.Windows.Forms.Label DefaultScenarioLabel;
-        private System.Windows.Forms.ComboBox TypeComboBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox NameTextBox;
         private System.Windows.Forms.Label ActiveLabel;
@@ -221,7 +309,16 @@ namespace Adeotek.DevToolbox.Forms
         private System.Windows.Forms.CheckBox IsShortcutCheckBox;
         private System.Windows.Forms.Button CloseButton;
         private System.Windows.Forms.Button SaveButton;
-        private System.Windows.Forms.DataGridView ArgumentsDataGridView;
         private System.Windows.Forms.TextBox TypeTextBox;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox ExecutableTextBox;
+        private System.Windows.Forms.OpenFileDialog ExecutableOpenFileDialog;
+        private System.Windows.Forms.Button SelectExecutableButton;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox ArgumentsTextBox;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox CheckIfRunningCheckBox;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox ProcessNameTextBox;
     }
 }
