@@ -33,7 +33,8 @@ namespace Adeotek.DevToolbox.Forms
                 };
                 _arguments = new List<Argument>();
 
-                var typeItems = Enum.GetNames<TaskTypes>().Where(i=> i != "Undefined").Select(i => new {Value = i, Name = i}).ToList();
+                var typeItems = Enum.GetNames<TaskTypes>().Where(i=> i != "Undefined" && i != "StartApp" && i != "StartService")
+                    .Select(i => new {Value = i, Name = i}).ToList();
                 TypeComboBox.DataSource = typeItems;
                 TypeComboBox.ValueMember = "Value";
                 TypeComboBox.DisplayMember = "Name";
@@ -69,7 +70,7 @@ namespace Adeotek.DevToolbox.Forms
             ArgumentsDataGridView.Columns[1].Resizable = DataGridViewTriState.True;
         }
         
-        private void SaveButton_Click(object sender, EventArgs e)
+        private void SaveButtonClick(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty((string) TypeComboBox.SelectedValue))
             {
@@ -103,7 +104,7 @@ namespace Adeotek.DevToolbox.Forms
             Close();
         }
 
-        private void CloseButton_Click(object sender, EventArgs e)
+        private void CloseButtonClick(object sender, EventArgs e)
         {
             Close();
         }

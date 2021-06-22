@@ -55,9 +55,9 @@ namespace Adeotek.DevToolbox.Forms
             this.label1.Location = new System.Drawing.Point(13, 9);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(39, 15);
+            this.label1.Size = new System.Drawing.Size(44, 15);
             this.label1.TabIndex = 13;
-            this.label1.Text = "Name";
+            this.label1.Text = "Name*";
             // 
             // ActiveLabel
             // 
@@ -103,7 +103,7 @@ namespace Adeotek.DevToolbox.Forms
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(100, 23);
             this.SaveButton.TabIndex = 20;
-            this.SaveButton.Text = "Save";
+            this.SaveButton.Text = "OK";
             this.SaveButton.UseVisualStyleBackColor = false;
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 

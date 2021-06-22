@@ -1,7 +1,7 @@
 ﻿
 namespace Adeotek.DevToolbox.Forms
 {
-    partial class AddTaskWindow
+    partial class AddStartServiceTaskWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,6 @@ namespace Adeotek.DevToolbox.Forms
         private void InitializeComponent()
         {
             this.DefaultScenarioLabel = new System.Windows.Forms.Label();
-            this.TypeComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.NameTextBox = new System.Windows.Forms.TextBox();
             this.ActiveLabel = new System.Windows.Forms.Label();
@@ -39,9 +38,9 @@ namespace Adeotek.DevToolbox.Forms
             this.IsShortcutCheckBox = new System.Windows.Forms.CheckBox();
             this.CloseButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
-            this.ArgumentsDataGridView = new System.Windows.Forms.DataGridView();
             this.TypeTextBox = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.ArgumentsDataGridView)).BeginInit();
+            this.label3 = new System.Windows.Forms.Label();
+            this.ServiceNameTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // DefaultScenarioLabel
@@ -50,20 +49,9 @@ namespace Adeotek.DevToolbox.Forms
             this.DefaultScenarioLabel.Location = new System.Drawing.Point(13, 9);
             this.DefaultScenarioLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.DefaultScenarioLabel.Name = "DefaultScenarioLabel";
-            this.DefaultScenarioLabel.Size = new System.Drawing.Size(61, 15);
+            this.DefaultScenarioLabel.Size = new System.Drawing.Size(56, 15);
             this.DefaultScenarioLabel.TabIndex = 13;
-            this.DefaultScenarioLabel.Text = "Task Type*";
-            // 
-            // TypeComboBox
-            // 
-            this.TypeComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TypeComboBox.BackColor = System.Drawing.SystemColors.Info;
-            this.TypeComboBox.FormattingEnabled = true;
-            this.TypeComboBox.Location = new System.Drawing.Point(12, 27);
-            this.TypeComboBox.Name = "TypeComboBox";
-            this.TypeComboBox.Size = new System.Drawing.Size(440, 23);
-            this.TypeComboBox.TabIndex = 12;
+            this.DefaultScenarioLabel.Text = "Task Type";
             // 
             // label1
             // 
@@ -82,7 +70,7 @@ namespace Adeotek.DevToolbox.Forms
             this.NameTextBox.BackColor = System.Drawing.SystemColors.Info;
             this.NameTextBox.Location = new System.Drawing.Point(12, 71);
             this.NameTextBox.Name = "NameTextBox";
-            this.NameTextBox.Size = new System.Drawing.Size(440, 23);
+            this.NameTextBox.Size = new System.Drawing.Size(337, 23);
             this.NameTextBox.TabIndex = 14;
             // 
             // ActiveLabel
@@ -133,7 +121,7 @@ namespace Adeotek.DevToolbox.Forms
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CloseButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.CloseButton.Location = new System.Drawing.Point(121, 416);
+            this.CloseButton.Location = new System.Drawing.Point(121, 246);
             this.CloseButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(100, 23);
@@ -146,7 +134,7 @@ namespace Adeotek.DevToolbox.Forms
             // 
             this.SaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SaveButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.SaveButton.Location = new System.Drawing.Point(13, 416);
+            this.SaveButton.Location = new System.Drawing.Point(13, 246);
             this.SaveButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(100, 23);
@@ -155,39 +143,46 @@ namespace Adeotek.DevToolbox.Forms
             this.SaveButton.UseVisualStyleBackColor = false;
             this.SaveButton.Click += new System.EventHandler(this.SaveButtonClick);
             // 
-            // ArgumentsDataGridView
-            // 
-            this.ArgumentsDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ArgumentsDataGridView.BackgroundColor = System.Drawing.SystemColors.Info;
-            this.ArgumentsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ArgumentsDataGridView.Location = new System.Drawing.Point(13, 170);
-            this.ArgumentsDataGridView.Name = "ArgumentsDataGridView";
-            this.ArgumentsDataGridView.RowTemplate.Height = 25;
-            this.ArgumentsDataGridView.Size = new System.Drawing.Size(439, 228);
-            this.ArgumentsDataGridView.TabIndex = 22;
-            // 
             // TypeTextBox
             // 
             this.TypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TypeTextBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.TypeTextBox.Location = new System.Drawing.Point(13, 27);
+            this.TypeTextBox.Location = new System.Drawing.Point(12, 27);
             this.TypeTextBox.Name = "TypeTextBox";
             this.TypeTextBox.ReadOnly = true;
-            this.TypeTextBox.Size = new System.Drawing.Size(440, 23);
+            this.TypeTextBox.Size = new System.Drawing.Size(337, 23);
             this.TypeTextBox.TabIndex = 23;
-            this.TypeTextBox.Visible = false;
             // 
-            // AddTaskWindow
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(13, 171);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(84, 15);
+            this.label3.TabIndex = 27;
+            this.label3.Text = "Service Name*";
+            // 
+            // ServiceNameTextBox
+            // 
+            this.ServiceNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ServiceNameTextBox.BackColor = System.Drawing.SystemColors.Info;
+            this.ServiceNameTextBox.Location = new System.Drawing.Point(12, 189);
+            this.ServiceNameTextBox.Name = "ServiceNameTextBox";
+            this.ServiceNameTextBox.Size = new System.Drawing.Size(337, 23);
+            this.ServiceNameTextBox.TabIndex = 26;
+            // 
+            // AddStartServiceTaskWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(464, 451);
+            this.ClientSize = new System.Drawing.Size(361, 281);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.ServiceNameTextBox);
             this.Controls.Add(this.TypeTextBox);
-            this.Controls.Add(this.ArgumentsDataGridView);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.label2);
@@ -197,13 +192,12 @@ namespace Adeotek.DevToolbox.Forms
             this.Controls.Add(this.label1);
             this.Controls.Add(this.NameTextBox);
             this.Controls.Add(this.DefaultScenarioLabel);
-            this.Controls.Add(this.TypeComboBox);
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(380, 450);
-            this.Name = "AddTaskWindow";
+            this.MaximumSize = new System.Drawing.Size(377, 320);
+            this.MinimumSize = new System.Drawing.Size(377, 320);
+            this.Name = "AddStartServiceTaskWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Add Task";
-            ((System.ComponentModel.ISupportInitialize)(this.ArgumentsDataGridView)).EndInit();
+            this.Text = "Add StartService Task";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -212,7 +206,6 @@ namespace Adeotek.DevToolbox.Forms
         #endregion
 
         private System.Windows.Forms.Label DefaultScenarioLabel;
-        private System.Windows.Forms.ComboBox TypeComboBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox NameTextBox;
         private System.Windows.Forms.Label ActiveLabel;
@@ -221,7 +214,8 @@ namespace Adeotek.DevToolbox.Forms
         private System.Windows.Forms.CheckBox IsShortcutCheckBox;
         private System.Windows.Forms.Button CloseButton;
         private System.Windows.Forms.Button SaveButton;
-        private System.Windows.Forms.DataGridView ArgumentsDataGridView;
         private System.Windows.Forms.TextBox TypeTextBox;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox ServiceNameTextBox;
     }
 }
