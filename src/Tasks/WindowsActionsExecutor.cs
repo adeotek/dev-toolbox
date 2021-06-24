@@ -162,7 +162,8 @@ namespace Adeotek.DevToolbox.Tasks
             }
 
             var script = Path.Combine(AppContext.BaseDirectory, "hostsReplaceIp.ps1");
-            var result = GetCommandOutput("pwsh.exe", $"{script} {oldIpAddress} {currentIpAddress[0]}");
+            _logger.LogDebug("pwsh.exe {Script} {OldIp} {NewIp}", script, oldIpAddress, currentIpAddress[0]);
+            var result = GetCommandOutput("pwsh.exe", $"{script} {oldIpAddress.Trim()} {currentIpAddress[0].Trim()}");
             if (result == null)
             {
                 throw new Exception("Unable to execute modify host file");
