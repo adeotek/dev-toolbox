@@ -312,6 +312,7 @@ namespace Adeotek.DevToolbox.Forms
             this.ScenariosDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ScenariosDataGridView.Location = new System.Drawing.Point(6, 35);
             this.ScenariosDataGridView.Name = "ScenariosDataGridView";
+            this.ScenariosDataGridView.ReadOnly = true;
             this.ScenariosDataGridView.RowTemplate.Height = 25;
             this.ScenariosDataGridView.Size = new System.Drawing.Size(357, 270);
             this.ScenariosDataGridView.TabIndex = 1;
