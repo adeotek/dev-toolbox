@@ -26,7 +26,7 @@ namespace Adeotek.DevToolbox.Forms
         private BindingList<Scenario> _scenarios;
         private AddScenarioWindow _scenarioWindow;
         private AddTaskWindow _taskWindow;
-        private AddStartServiceTaskWindow _startServiceTaskWindow;
+        private AddManageServiceTaskWindow _manageServiceTaskWindow;
         private AddStartAppTaskWindow _startAppTaskWindow;
 
         public AppConfigurationWindow(
@@ -147,7 +147,7 @@ namespace Adeotek.DevToolbox.Forms
         {
             try
             {
-                ShowAddTaskWindow(TaskTypes.StartService);
+                ShowAddTaskWindow(TaskTypes.ManageService);
             }
             catch (Exception ex)
             {
@@ -252,21 +252,21 @@ namespace Adeotek.DevToolbox.Forms
                         _startAppTaskWindow.Activate();
                     }
                     break;
-                case TaskTypes.StartService:
-                    if (_startServiceTaskWindow == null || _startServiceTaskWindow.IsDisposed)
+                case TaskTypes.ManageService:
+                    if (_manageServiceTaskWindow == null || _manageServiceTaskWindow.IsDisposed)
                     {
-                        _startServiceTaskWindow = new AddStartServiceTaskWindow(task, _logger);
-                        _startServiceTaskWindow.OnSave += OnTaskSaveHandle;
-                        _startServiceTaskWindow.Show();
+                        _manageServiceTaskWindow = new AddManageServiceTaskWindow(task, _logger);
+                        _manageServiceTaskWindow.OnSave += OnTaskSaveHandle;
+                        _manageServiceTaskWindow.Show();
                     }
                     else
                     {
-                        if (_startServiceTaskWindow.WindowState != FormWindowState.Normal &&
-                            _startServiceTaskWindow.WindowState != FormWindowState.Maximized)
+                        if (_manageServiceTaskWindow.WindowState != FormWindowState.Normal &&
+                            _manageServiceTaskWindow.WindowState != FormWindowState.Maximized)
                         {
-                            _startServiceTaskWindow.WindowState = FormWindowState.Normal;
+                            _manageServiceTaskWindow.WindowState = FormWindowState.Normal;
                         }
-                        _startServiceTaskWindow.Activate();
+                        _manageServiceTaskWindow.Activate();
                     }
                     break;
                 default:
@@ -466,8 +466,8 @@ namespace Adeotek.DevToolbox.Forms
             try
             {
                 var key = GetStartUpRegistryKey();
-                var value = key.GetValue(RegistryValueKey);
-                return Application.ExecutablePath.Equals(value?.ToString() ?? string.Empty, StringComparison.InvariantCultureIgnoreCase);
+                var value = key.GetValue(RegistryValueKey)?.ToString()?.Trim('"') ?? string.Empty;
+                return Application.ExecutablePath.Equals(value, StringComparison.InvariantCultureIgnoreCase);
             }
             catch (Exception e)
             {
@@ -479,8 +479,9 @@ namespace Adeotek.DevToolbox.Forms
 
         private RegistryKey GetStartUpRegistryKey(bool writable = false)
         {
-            var x64Key = Registry.LocalMachine.OpenSubKey(X64RegistryRunPath ,writable);
-            var key = x64Key ?? Registry.CurrentUser.OpenSubKey(RegistryRunPath, writable);
+            // var x64Key = Registry.LocalMachine.OpenSubKey(X64RegistryRunPath ,writable);
+            // var key = x64Key ?? Registry.CurrentUser.OpenSubKey(RegistryRunPath, writable);
+            var key = Registry.CurrentUser.OpenSubKey(RegistryRunPath, writable);
             if (key == null)
             {
                 throw new Exception($@"Invalid registry key: [{RegistryRunPath}]");

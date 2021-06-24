@@ -33,7 +33,7 @@ namespace Adeotek.DevToolbox.Forms
                 };
                 _arguments = new List<Argument>();
 
-                var typeItems = Enum.GetNames<TaskTypes>().Where(i=> i != "Undefined" && i != "StartApp" && i != "StartService")
+                var typeItems = Enum.GetNames<TaskTypes>().Where(i=> i != "Undefined" && i != "StartApp" && i != "ManageService")
                     .Select(i => new {Value = i, Name = i}).ToList();
                 TypeComboBox.DataSource = typeItems;
                 TypeComboBox.ValueMember = "Value";

@@ -42,7 +42,7 @@ namespace Adeotek.DevToolbox.Forms
             this.AutoOpenMonitorLabel = new System.Windows.Forms.Label();
             this.AutoOpenMonitorCheckBox = new System.Windows.Forms.CheckBox();
             this.TasksTabPage = new System.Windows.Forms.TabPage();
-            this.AddStartServiceTaskButton = new System.Windows.Forms.Button();
+            this.AddManageServiceTaskButton = new System.Windows.Forms.Button();
             this.AddStartAppTaskButton = new System.Windows.Forms.Button();
             this.AddTaskButton = new System.Windows.Forms.Button();
             this.TasksDataGridView = new System.Windows.Forms.DataGridView();
@@ -208,7 +208,7 @@ namespace Adeotek.DevToolbox.Forms
             // TasksTabPage
             // 
             this.TasksTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.TasksTabPage.Controls.Add(this.AddStartServiceTaskButton);
+            this.TasksTabPage.Controls.Add(this.AddManageServiceTaskButton);
             this.TasksTabPage.Controls.Add(this.AddStartAppTaskButton);
             this.TasksTabPage.Controls.Add(this.AddTaskButton);
             this.TasksTabPage.Controls.Add(this.TasksDataGridView);
@@ -220,18 +220,18 @@ namespace Adeotek.DevToolbox.Forms
             this.TasksTabPage.TabIndex = 1;
             this.TasksTabPage.Text = "Tasks";
             // 
-            // AddStartServiceTaskButton
+            // AddManageServiceTaskButton
             // 
-            this.AddStartServiceTaskButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddStartServiceTaskButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.AddStartServiceTaskButton.Location = new System.Drawing.Point(139, 6);
-            this.AddStartServiceTaskButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.AddStartServiceTaskButton.Name = "AddStartServiceTaskButton";
-            this.AddStartServiceTaskButton.Size = new System.Drawing.Size(137, 23);
-            this.AddStartServiceTaskButton.TabIndex = 12;
-            this.AddStartServiceTaskButton.Text = "Add StartService Task";
-            this.AddStartServiceTaskButton.UseVisualStyleBackColor = false;
-            this.AddStartServiceTaskButton.Click += new System.EventHandler(this.AddServiceStartTaskButtonClick);
+            this.AddManageServiceTaskButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.AddManageServiceTaskButton.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.AddManageServiceTaskButton.Location = new System.Drawing.Point(139, 6);
+            this.AddManageServiceTaskButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.AddManageServiceTaskButton.Name = "AddManageServiceTaskButton";
+            this.AddManageServiceTaskButton.Size = new System.Drawing.Size(137, 23);
+            this.AddManageServiceTaskButton.TabIndex = 12;
+            this.AddManageServiceTaskButton.Text = "Add ManageService Task";
+            this.AddManageServiceTaskButton.UseVisualStyleBackColor = false;
+            this.AddManageServiceTaskButton.Click += new System.EventHandler(this.AddServiceStartTaskButtonClick);
             // 
             // AddStartAppTaskButton
             // 
@@ -405,7 +405,7 @@ namespace Adeotek.DevToolbox.Forms
         private System.Windows.Forms.DataGridView ScenariosDataGridView;
         private System.Windows.Forms.Button AddTaskButton;
         private System.Windows.Forms.Button AddScenarioButton;
-        private System.Windows.Forms.Button AddStartServiceTaskButton;
+        private System.Windows.Forms.Button AddManageServiceTaskButton;
         private System.Windows.Forms.Button AddStartAppTaskButton;
     }
 }
