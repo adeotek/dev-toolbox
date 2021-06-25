@@ -33,7 +33,7 @@ namespace Adeotek.DevToolbox.Forms
                 };
                 _arguments = new List<Argument>();
 
-                var typeItems = Enum.GetNames<TaskTypes>().Where(i=> i != "Undefined" && i != "StartApp" && i != "StartService")
+                var typeItems = Enum.GetNames<TaskTypes>().Where(i=> i != "Undefined" && i != "StartApp" && i != "ManageService")
                     .Select(i => new {Value = i, Name = i}).ToList();
                 TypeComboBox.DataSource = typeItems;
                 TypeComboBox.ValueMember = "Value";
@@ -72,11 +72,6 @@ namespace Adeotek.DevToolbox.Forms
         
         private void SaveButtonClick(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty((string) TypeComboBox.SelectedValue))
-            {
-                MessageBox.Show(@"Invalid Type!");
-                return;
-            }
             if (string.IsNullOrWhiteSpace(NameTextBox.Text))
             {
                 MessageBox.Show(@"Invalid Name!");
@@ -85,6 +80,11 @@ namespace Adeotek.DevToolbox.Forms
 
             if (!_isEdit)
             {
+                if (string.IsNullOrEmpty((string) TypeComboBox.SelectedValue))
+                {
+                    MessageBox.Show(@"Invalid Type!");
+                    return;
+                }
                 _task.Type = (string) TypeComboBox.SelectedValue;
             }
             _task.Name = NameTextBox.Text;

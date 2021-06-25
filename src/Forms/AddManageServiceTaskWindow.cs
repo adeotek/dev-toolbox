@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Adeotek.DevToolbox.Forms
 {
-    public partial class AddStartServiceTaskWindow : Form
+    public partial class AddManageServiceTaskWindow : Form
     {
         public delegate void SaveHandler(SaveTaskEventArgs e);
         public event SaveHandler OnSave;
@@ -17,7 +17,7 @@ namespace Adeotek.DevToolbox.Forms
         private readonly AppTask _task;
         private readonly bool _isEdit;
         
-        public AddStartServiceTaskWindow(AppTask task, ILogger logger)
+        public AddManageServiceTaskWindow(AppTask task, ILogger logger)
         {
             _logger = logger;
             InitializeComponent();
@@ -28,12 +28,12 @@ namespace Adeotek.DevToolbox.Forms
                 _task = new AppTask
                 {
                     Guid = Guid.NewGuid(),
-                    Type = TaskTypes.StartService.ToString()
+                    Type = TaskTypes.ManageService.ToString()
                 };
             }
             else
             {
-                if (task.Type != TaskTypes.StartService.ToString())
+                if (task.Type != TaskTypes.ManageService.ToString())
                 {
                     throw new Exception($"Invalid task type: {task.Type}");
                 }
@@ -41,6 +41,7 @@ namespace Adeotek.DevToolbox.Forms
                 _isEdit = true;
                 _task = task;
                 ServiceNameTextBox.Text = _task.Arguments.FirstOrDefault(a => a.Key == "ServiceName").Value ?? string.Empty;
+                ActionComboBox.SelectedItem = _task.Arguments.FirstOrDefault(a => a.Key == "Action").Value ?? string.Empty;
             }
 
             TypeTextBox.Text = _task.Type;
@@ -66,7 +67,11 @@ namespace Adeotek.DevToolbox.Forms
             _task.Name = NameTextBox.Text;
             _task.IsActive = IsActiveCheckBox.Checked;
             _task.IsShortcut = IsShortcutCheckBox.Checked;
-            _task.Arguments = new Dictionary<string, string> {{"ServiceName", ServiceNameTextBox.Text}};
+            _task.Arguments = new Dictionary<string, string>
+            {
+                {"ServiceName", ServiceNameTextBox.Text},
+                {"Action", ActionComboBox.SelectedItem?.ToString()}
+            };
 
             var onSaveArgs = new SaveTaskEventArgs
             {

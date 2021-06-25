@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.ServiceProcess;
+using System.Windows.Forms;
 using Adeotek.DevToolbox.Common;
 using Adeotek.DevToolbox.Models;
 using Microsoft.Extensions.Logging;
@@ -76,6 +77,62 @@ namespace Adeotek.DevToolbox.Tasks
             _logger.LogInformation("App launched {AppName} with args {Arguments}", processName ?? executable, string.Join(" ", arguments ?? Array.Empty<string>()));
         }
 
+        public void ManageService(string serviceName, string action)
+        {
+            if (string.IsNullOrEmpty(serviceName))
+            {
+                throw new ArgumentException(@"Null or empty", nameof(serviceName));
+            }
+
+            var service = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName.Equals(serviceName, StringComparison.InvariantCultureIgnoreCase));
+            if (service == null)
+            {
+                throw new Exception($"Service {serviceName} does not exists");
+            }
+            
+            _logger.LogDebug("Service {ServiceName} status: {Status}", serviceName, service.Status.ToString());
+            if (string.IsNullOrEmpty(action))
+            {
+                action = "Start";
+            }
+
+            _logger.LogDebug("{Action} {ServiceName}...", action, serviceName);
+            var script = Path.Combine(AppContext.BaseDirectory, "manageService.ps1");
+            var result = GetCommandOutput("pwsh.exe", $"{script} {serviceName} {action}");
+            
+            if (result == null)
+            {
+                throw new Exception("Unable to execute action");
+            }
+
+            var results = result.ToList();
+            if (results.All(string.IsNullOrEmpty))
+            {
+                return;
+            }
+
+            results.ForEach(s => _logger.LogWarning("{Message}", s));
+            throw new Exception("Unable to execute action");
+        }
+
+        public void ManageService(AppTask task)
+        {
+            if (!(task?.IsActive ?? false))
+            {
+                return;
+            }
+            
+            if (task.Arguments == null)
+            {
+                throw new ArgumentNullException("Task.Arguments");
+            }
+
+            var serviceName = task.Arguments.ContainsKey("ServiceName") ? task.Arguments["ServiceName"] : null;
+            var action = task.Arguments.ContainsKey("Action") ? task.Arguments["Action"] : null;
+            ManageService(serviceName, action);
+            _logger.LogInformation("{Action} {ServiceName} executed successfully", action ?? "[UNKNOWN]", serviceName);
+        }
+        
         public void StartWsl2(string distroName, string wslHostname)
         {
             if (string.IsNullOrEmpty(distroName))
@@ -88,25 +145,23 @@ namespace Adeotek.DevToolbox.Tasks
                 throw new ArgumentException(@"Null or empty", nameof(wslHostname));
             }
             
-            var currentIpAddress = GetCommandOutput("wsl.exe", $"-d {distroName} hostname -I")?.ToList() ?? new List<string>();
-            if (currentIpAddress.Count == 0)
+            var script = Path.Combine(AppContext.BaseDirectory, "startWsl2.ps1");
+            _logger.LogDebug("pwsh.exe {Script} {DistroName} {WslHostname}", script, distroName, wslHostname);
+            var result = GetCommandOutput("pwsh.exe", $"{script} {distroName} {wslHostname}", true);
+            if (result == null)
             {
-                throw new Exception($"Unable to start WSL {distroName}");
+                throw new Exception("Unable to execute start WSL 2 script");
             }
-            
-            _logger.LogInformation("WSL {Distro} started with IP: {IpAddress}", distroName, currentIpAddress[0]);
-            var hostsFile = Path.Combine(_windowsPath, HostsFileRelativePath);
-            var hostsContent = File.ReadAllLines(hostsFile);
-            var oldIpAddress = hostsContent.FirstOrDefault(l => l.Contains(wslHostname))?.Replace(wslHostname, string.Empty).Trim();
-            
-            if (string.IsNullOrWhiteSpace(oldIpAddress) || string.IsNullOrWhiteSpace(currentIpAddress[0]))
+
+            var results = result.ToList();
+            if (results.All(string.IsNullOrEmpty))
             {
+                _logger.LogInformation("WSL2 start script executed for {Distro}", distroName);
                 return;
             }
 
-            var newHostsContent = hostsContent.Select(l => l.Contains(oldIpAddress) ? l.Replace(oldIpAddress, currentIpAddress[0]) : l).ToArray();
-            File.WriteAllLines(hostsFile, newHostsContent);
-            _logger.LogInformation("hosts file IP changed from {OldIp} to {NewIp}", oldIpAddress, currentIpAddress[0]);
+            results.ForEach(s => _logger.LogWarning("{Message}", s));
+            throw new Exception("Unable to execute start WSL 2 script");
         }
         
         public void StartWsl2(AppTask task)
@@ -123,67 +178,30 @@ namespace Adeotek.DevToolbox.Tasks
 
             StartWsl2(task.Arguments.ContainsKey("DistroName") ? task.Arguments["DistroName"] : null, task.Arguments.ContainsKey("WslHostname") ? task.Arguments["WslHostname"] : null);
         }
-
-        public void StartService(string serviceName)
-        {
-            if (string.IsNullOrEmpty(serviceName))
-            {
-                throw new ArgumentException(@"Null or empty", nameof(serviceName));
-            }
-
-            var service = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName.Equals(serviceName, StringComparison.InvariantCultureIgnoreCase));
-            if (service == null)
-            {
-                throw new Exception($"Service {serviceName} does not exists");
-            }
-            
-            _logger.LogDebug("Service {ServiceName} status: {Status}", serviceName, service.Status.ToString());
-            if (service.Status == ServiceControllerStatus.Stopped)
-            {
-                service.Start();
-            }
-            else
-            {
-                _logger.LogDebug("Service {ServiceName} already running", serviceName);
-            }
-        }
-
-        public void StartService(AppTask task)
-        {
-            if (!(task?.IsActive ?? false))
-            {
-                return;
-            }
-            
-            if (task.Arguments == null)
-            {
-                throw new ArgumentNullException("Task.Arguments");
-            }
-
-            var serviceName = task.Arguments.ContainsKey("ServiceName") ? task.Arguments["ServiceName"] : null;
-            StartService(serviceName);
-            _logger.LogInformation("Service started {ServiceName}", serviceName);
-        }
         
-        public void ExecuteCommand(string executable, string arguments = null)
+        public void ExecuteCommand(string executable, string arguments = null, bool elevated = false)
         {
             if (string.IsNullOrEmpty(executable))
             {
                 throw new ArgumentException(@"Null or empty", nameof(executable));
             }
             
-            using var p = new Process
+            // set start info
+            var startInfo = new ProcessStartInfo(executable)
             {
-                // set start info
-                StartInfo = new ProcessStartInfo(executable)
-                {
-                    // WorkingDirectory = @"C:\"
-                    Arguments = arguments ?? string.Empty, 
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false, 
-                    CreateNoWindow = true
-                }
+                // WorkingDirectory = @"C:\"
+                Arguments = arguments ?? string.Empty,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
             };
+            
+            if (elevated)
+            {
+                startInfo.Verb = "runas";
+            }
+            
+            using var p = new Process {StartInfo = startInfo};
             // event handlers for output & error
             p.ErrorDataReceived += OnErrorDataReceived;
             p.OutputDataReceived += OnOutputDataReceived;
@@ -197,7 +215,7 @@ namespace Adeotek.DevToolbox.Tasks
             // p.Close();
         }
         
-        public IEnumerable<string> GetCommandOutput(string executable, string arguments = null)
+        public IEnumerable<string> GetCommandOutput(string executable, string arguments = null, bool elevated = false)
         {
             if (string.IsNullOrEmpty(executable))
             {
@@ -205,18 +223,22 @@ namespace Adeotek.DevToolbox.Tasks
             }
             
             var result = new List<string>();
-            using var p = new Process
+            // set start info
+            var startInfo = new ProcessStartInfo(executable)
             {
-                // set start info
-                StartInfo = new ProcessStartInfo(executable)
-                {
-                    // WorkingDirectory = @"C:\"
-                    Arguments = arguments ?? string.Empty, 
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false, 
-                    CreateNoWindow = true
-                }
+                // WorkingDirectory = @"C:\"
+                Arguments = arguments ?? string.Empty, 
+                RedirectStandardOutput = true,
+                UseShellExecute = false, 
+                CreateNoWindow = true
             };
+            
+            if (elevated)
+            {
+                startInfo.Verb = "runas";
+            }
+            
+            using var p = new Process {StartInfo = startInfo};
             // start process
             p.Start();
             while (!p.StandardOutput.EndOfStream)

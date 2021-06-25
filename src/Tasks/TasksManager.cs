@@ -66,8 +66,8 @@ namespace Adeotek.DevToolbox.Tasks
                 case TaskTypes.StartWsl2:
                     _windowsActionsExecutor.StartWsl2(task);
                     break;
-                case TaskTypes.StartService:
-                    _windowsActionsExecutor.StartService(task);
+                case TaskTypes.ManageService:
+                    _windowsActionsExecutor.ManageService(task);
                     break;
                 case TaskTypes.Custom:
                     ExecuteCustomTask(task);

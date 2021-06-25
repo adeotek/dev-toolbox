@@ -4,7 +4,7 @@
     {
         Undefined,
         StartApp,
-        StartService,
+        ManageService,
         StartWsl2,
         Custom
     }

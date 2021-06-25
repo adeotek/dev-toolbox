@@ -9,19 +9,19 @@
         <Company>AdeoTEK Software SRL</Company>
         <Authors>George Benjamin-Schonberger</Authors>
         <Copyright>Copyright © AdeoTEK Software SRL 2021</Copyright>
-        <AssemblyVersion>1.0.0.7</AssemblyVersion>
-        <FileVersion>1.0.0.7</FileVersion>
+        <AssemblyVersion>1.0.0.10</AssemblyVersion>
+        <FileVersion>1.0.0.10</FileVersion>
         <Version>1.0.0</Version>
         <ApplicationIcon>logo-graph-only.ico</ApplicationIcon>
         <ApplicationManifest>app.manifest</ApplicationManifest>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <OutputPath>..\Bin\Debug</OutputPath>
+      <OutputPath>..\..\Bin\Debug\</OutputPath>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <OutputPath>..\Bin\Release</OutputPath>
+      <OutputPath>..\..\Bin\Release\</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -37,7 +37,6 @@
       <PackageReference Include="Serilog" Version="2.10.0" />
       <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
       <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
-      <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
       <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
       <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.3.0" />
       <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
@@ -45,12 +44,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Forms\AddStartServiceTaskWindow.cs">
-        <SubType>Form</SubType>
-      </Compile>
-      <Compile Update="Forms\AddStartAppTaskWindow.cs">
-        <SubType>Form</SubType>
-      </Compile>
       <Compile Update="Properties\Resources.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
@@ -59,24 +52,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update="Forms\AddStartAppTaskWindow - Copy %282%29 - Copy.resx">
-        <DependentUpon>AddStartAppTaskWindow - Copy (2).resx</DependentUpon>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Forms\AddStartAppTaskWindow - Copy %282%29.resx">
-        <DependentUpon>AddStartAppTaskWindow.resx</DependentUpon>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Forms\AddStartAppTaskWindow - Copy - Copy %282%29.resx">
-        <DependentUpon>AddStartAppTaskWindow - Copy.resx</DependentUpon>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Forms\AddStartAppTaskWindow - Copy - Copy - Copy.resx">
-        <DependentUpon>AddStartAppTaskWindow - Copy - Copy.resx</DependentUpon>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Forms\AddStartAppTaskWindow - Copy - Copy.resx">
-        <DependentUpon>AddStartAppTaskWindow - Copy.resx</DependentUpon>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Forms\AddStartAppTaskWindow - Copy.resx">
-        <DependentUpon>AddStartAppTaskWindow.resx</DependentUpon>
-      </EmbeddedResource>
       <EmbeddedResource Update="Properties\Resources.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -97,6 +72,12 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="app.manifest">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="manageService.ps1">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="startWsl2.ps1">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

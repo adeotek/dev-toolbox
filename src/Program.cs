@@ -84,7 +84,6 @@ namespace Adeotek.DevToolbox
                     .MinimumLevel.Debug()
                     .WriteTo.File($"{AppProcessName}_errors.log",
                         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} - {Level:u3} - {Message:lj}{NewLine:1}{Exception:1}")
-                    .WriteTo.Console()
                     .CreateLogger();
                 Log.Fatal(ex, "The web application application failed to start correctly");
                 Log.CloseAndFlush();
