@@ -145,43 +145,23 @@ namespace Adeotek.DevToolbox.Tasks
                 throw new ArgumentException(@"Null or empty", nameof(wslHostname));
             }
             
-            var currentIpAddress = GetCommandOutput("wsl.exe", $"-d {distroName} hostname -I")?.ToList() ?? new List<string>();
-            if (currentIpAddress.Count == 0)
-            {
-                throw new Exception($"Unable to start WSL {distroName}");
-            }
-            
-            _logger.LogInformation("WSL {Distro} started with IP: {IpAddress}", distroName, currentIpAddress[0]);
-            var hostsFile = Path.Combine(_windowsPath, HostsFileRelativePath);
-            var hostsContent = File.ReadAllLines(hostsFile);
-            var oldIpAddress = hostsContent.FirstOrDefault(l => l.Contains(wslHostname))?.Replace(wslHostname, string.Empty).Trim();
-            
-            if (string.IsNullOrWhiteSpace(oldIpAddress) || string.IsNullOrWhiteSpace(currentIpAddress[0]))
-            {
-                return;
-            }
-
-            var script = Path.Combine(AppContext.BaseDirectory, "hostsReplaceIp.ps1");
-            _logger.LogDebug("pwsh.exe {Script} {OldIp} {NewIp}", script, oldIpAddress, currentIpAddress[0]);
-            var result = GetCommandOutput("pwsh.exe", $"{script} {oldIpAddress.Trim()} {currentIpAddress[0].Trim()}");
+            var script = Path.Combine(AppContext.BaseDirectory, "startWsl2.ps1");
+            _logger.LogDebug("pwsh.exe {Script} {DistroName} {WslHostname}", script, distroName, wslHostname);
+            var result = GetCommandOutput("pwsh.exe", $"{script} {distroName} {wslHostname}", true);
             if (result == null)
             {
-                throw new Exception("Unable to execute modify host file");
+                throw new Exception("Unable to execute start WSL 2 script");
             }
 
             var results = result.ToList();
             if (results.All(string.IsNullOrEmpty))
             {
-                _logger.LogInformation("hosts file IP changed from {OldIp} to {NewIp}", oldIpAddress, currentIpAddress[0]);
+                _logger.LogInformation("WSL2 start script executed for {Distro}", distroName);
                 return;
             }
 
             results.ForEach(s => _logger.LogWarning("{Message}", s));
-            throw new Exception("Unable to execute modify host file");
-            
-            // var newHostsContent = hostsContent.Select(l => l.Contains(oldIpAddress) ? l.Replace(oldIpAddress, currentIpAddress[0]) : l).ToArray();
-            // File.WriteAllLines(hostsFile, newHostsContent);
-            // _logger.LogInformation("hosts file IP changed from {OldIp} to {NewIp}", oldIpAddress, currentIpAddress[0]);
+            throw new Exception("Unable to execute start WSL 2 script");
         }
         
         public void StartWsl2(AppTask task)

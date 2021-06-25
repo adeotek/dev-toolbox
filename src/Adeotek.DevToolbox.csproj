@@ -9,8 +9,8 @@
         <Company>AdeoTEK Software SRL</Company>
         <Authors>George Benjamin-Schonberger</Authors>
         <Copyright>Copyright © AdeoTEK Software SRL 2021</Copyright>
-        <AssemblyVersion>1.0.0.9</AssemblyVersion>
-        <FileVersion>1.0.0.9</FileVersion>
+        <AssemblyVersion>1.0.0.10</AssemblyVersion>
+        <FileVersion>1.0.0.10</FileVersion>
         <Version>1.0.0</Version>
         <ApplicationIcon>logo-graph-only.ico</ApplicationIcon>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -77,7 +77,7 @@
       <None Update="manageService.ps1">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="hostsReplaceIp.ps1">
+      <None Update="startWsl2.ps1">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
