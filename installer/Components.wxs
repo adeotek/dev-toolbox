@@ -8,7 +8,7 @@
       <!-- Shortcut to main application -->
       <Component Id="MainAppShortcut" Guid="{ABFDE8D1-9146-4703-AC9D-FEFA2E8907BB}">
         <Shortcut Id="MainAppShortcut"
-                  Name="!(loc.ProductName)"
+                  Name="!(loc.MyProductName)"
                   Target="[INSTALLFOLDER]Adeotek.DevToolbox.exe"
                   Directory="InstallProgramMenuFolder"
                   WorkingDirectory="INSTALLFOLDER"

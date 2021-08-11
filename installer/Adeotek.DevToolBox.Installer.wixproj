@@ -73,7 +73,7 @@
     <Exec Command="rd /s /q ..\src\bin\$(Configuration)\net5.0-windows\win-x64\publish\zh-Hans" />
     <Exec Command="rd /s /q ..\src\bin\$(Configuration)\net5.0-windows\win-x64\publish\zh-Hant" />
     <!-- Remove debug information -->
-    <Exec Command="rm /s /q ..\src\bin\$(Configuration)\net5.0-windows\win-x64\publish\Adeotek.DevToolbox.pdb" />
+    <Exec Command="del ..\src\bin\$(Configuration)\net5.0-windows\win-x64\publish\Adeotek.DevToolbox.pdb" />
     <!-- Get assembly version -->
     <GetAssemblyIdentity AssemblyFiles="..\src\bin\$(Configuration)\net5.0-windows\win-x64\publish\Adeotek.DevToolbox.dll">
       <Output TaskParameter="Assemblies" ItemName="AssemblyVersion" />

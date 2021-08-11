@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
-  <String Id="ProductName">AdeoTEK DEV Toolbox</String>
+  <String Id="MyProductName">AdeoTEK DEV Toolbox</String>
+  <String Id="MyCompanyName">AdeoTEK Software SRL</String>
   <String Id="InstallerName">AdeoTEK DEV Toolbox Installer</String>
-  <String Id="CompanyName">AdeoTEK Software SRL</String>
   <String Id="ProductNameFolder">AdeoTEK.DEVToolbox</String>
   <String Id="DowngradeErrorMessage">A newer version of AdeoTEK DEV Toolbox is already installed.</String>
   <String Id="Language">1033</String>
