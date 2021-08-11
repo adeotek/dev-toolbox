@@ -31,12 +31,14 @@ namespace Adeotek.DevToolbox.Common
             _eventsAggregator.OnRunAction += OnRunActionHandle;
             _eventsAggregator.OnWindowsSessionSwitch += OnWindowsSessionSwitchHandle;
             _tasksManager = tasksManager;
-            AppPath = AppDomain.CurrentDomain.BaseDirectory;
+            AppPath = _configuration.GetValue("AppPath", AppDomain.CurrentDomain.BaseDirectory);
+            UserSettingsPath = _configuration.GetValue<string>("UserSettingsPath", null);
             _logger.LogInformation("Load app context...");
             LoadAppConfiguration();
         }
 
         public string AppPath { get; }
+        public string UserSettingsPath { get; }
         public bool DebugMode => _appConfiguration?.Debug ?? false;
         public bool RunDefaultScenarioOnStartup => _appConfiguration?.RunDefaultScenarioOnStartup ?? false;
         public bool AutoOpenMonitor => _appConfiguration?.AutoOpenMonitor ?? false;

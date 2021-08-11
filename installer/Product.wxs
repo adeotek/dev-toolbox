@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <!-- Product unique ID -->
+  <?define ProductCode = "{27822BFE-9AD7-484E-A507-D5D1050D40EB}" ?>
+  <!-- Fixed upgrade Id -->
+  <?define UpgradeCode = "{2F1B5B76-A2B0-487E-AA62-2C16928E94B0}" ?>
+  <!-- Define main product -->
+  <Product Id="$(var.ProductCode)" 
+           Name="!(loc.ProductName)" 
+           Language="!(loc.Language)"
+           Version="$(var.BuildVersion)" 
+           Manufacturer="!(loc.CompanyName)" 
+           UpgradeCode="$(var.UpgradeCode)">
+    <!-- Provide package details -->
+    <Package InstallerVersion="200" 
+             Compressed="yes" 
+             InstallScope="perMachine" 
+             Platform="x64"
+             Languages="!(loc.Language)"
+             Manufacturer="!(loc.CompanyName)" 
+             Description="!(loc.Description)"
+             Keywords="!(loc.Keywords)"
+             Comments="!(loc.Comments)" />
+    <!-- Downgrade error message -->
+		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" />
+    <!-- Include .cab file into .msi file -->
+		<MediaTemplate EmbedCab="yes" />
+    <!-- Define main app icon -->
+    <Icon Id="icon.ico" SourceFile="$(var.Adeotek.DevToolbox.ProjectDir)\logo.ico" />
+    <!-- Use the icon.ico icon for this installer (shows up in Add/Remove programs) -->
+    <Property Id="ARPPRODUCTICON">icon.ico</Property>
+    <!-- Help/Support website (shows in the Add/Remove programs) -->
+    <Property Id="ARPURLINFOABOUT">https://github.com/adeotek/dev-toolbox</Property>
+    <!-- Create a basic UI for the installer -->
+    <UIRef Id="WixUI_Minimal" />
+    <!-- Change the installer UI background images -->
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\Assets\License.rtf" />
+    <!-- Define components, shortcuts, files etc... for installer -->
+    <Feature Id="ProductFeature" Title="!(loc.ProductName)" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="PublishedComponents" />
+    </Feature>
+  </Product>
+</Wix>

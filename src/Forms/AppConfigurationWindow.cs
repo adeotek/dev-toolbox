@@ -401,7 +401,7 @@ namespace Adeotek.DevToolbox.Forms
         #region Load/Save Data
         private AppConfiguration LoadConfigurationData()
         {
-            var physicalPath = Path.Combine(_context.AppPath, "appsettings.json");
+            var physicalPath = Path.Combine(_context.UserSettingsPath, Program.UserSettingsFileName);
             if (!File.Exists(physicalPath))
             {
                 throw new Exception($"Invalid or missing configuration file [{physicalPath}]!");
@@ -414,16 +414,12 @@ namespace Adeotek.DevToolbox.Forms
 
         private void SaveConfiguration()
         {
-            var physicalPath = Path.Combine(_context.AppPath, "appsettings.json");
+            var physicalPath = Path.Combine(_context.UserSettingsPath, Program.UserSettingsFileName);
             if (!File.Exists(physicalPath))
             {
                 throw new Exception($"Invalid or missing configuration file [{physicalPath}]!");
             }
             var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(physicalPath)) ?? new JObject { { "Application", null } };
-            // var originalConfiguration = jObject.TryGetValue("Application", out var config)
-            //     ? JsonConvert.DeserializeObject<AppConfiguration>(config.ToString())
-            //     : new AppConfiguration();
-
             var appConfiguration = new AppConfiguration
             {
                 RunDefaultScenarioOnStartup = AutoRunDefaultScenarioCheckBox.Checked,
