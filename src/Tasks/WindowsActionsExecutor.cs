@@ -98,7 +98,7 @@ namespace Adeotek.DevToolbox.Tasks
 
             _logger.LogDebug("{Action} {ServiceName}...", action, serviceName);
             var script = Path.Combine(AppContext.BaseDirectory, "manageService.ps1");
-            var result = GetCommandOutput("pwsh.exe", $"{script} {serviceName} {action}");
+            var result = GetCommandOutput("pwsh.exe", $"\"{script}\" {serviceName} {action}");
             
             if (result == null)
             {
@@ -147,7 +147,7 @@ namespace Adeotek.DevToolbox.Tasks
             
             var script = Path.Combine(AppContext.BaseDirectory, "startWsl2.ps1");
             _logger.LogDebug("pwsh.exe {Script} {DistroName} {WslHostname}", script, distroName, wslHostname);
-            var result = GetCommandOutput("pwsh.exe", $"{script} {distroName} {wslHostname}", true);
+            var result = GetCommandOutput("pwsh.exe", $"\"{script}\" {distroName} {wslHostname}", true);
             if (result == null)
             {
                 throw new Exception("Unable to execute start WSL 2 script");

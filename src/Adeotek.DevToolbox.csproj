@@ -9,9 +9,9 @@
         <Company>AdeoTEK Software SRL</Company>
         <Authors>George Benjamin-Schonberger</Authors>
         <Copyright>Copyright © AdeoTEK Software SRL 2021</Copyright>
-        <AssemblyVersion>1.0.1.13</AssemblyVersion>
-        <FileVersion>1.0.1.13</FileVersion>
-        <Version>1.0.1</Version>
+        <AssemblyVersion>1.0.2.14</AssemblyVersion>
+        <FileVersion>1.0.2.14</FileVersion>
+        <Version>1.0.2</Version>
         <ApplicationIcon>logo.ico</ApplicationIcon>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <Platforms>x64</Platforms>
