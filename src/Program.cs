@@ -24,12 +24,15 @@ namespace Adeotek.DevToolbox
         private const string AppAlreadyStartedMessage = "The application is already running!";
         private const string AppCannotBeStartedMessage = "The application did not start correctly!{0}{1}";
         private const int SplashScreenDuration = 2000;
-        
+        private const string AppSettingsFileName = "appsettings.json";
+        private const string UserSettingsFilePath = @".adeotek\DevToolbox";
+        public const string UserSettingsFileName = "settings.json";
+
         private static EventsAggregator _eventsAggregator;
         private static TrayIcon _rootControl;
         private static string _environmentName;
         private static IConfiguration _configuration;
-        public static string AppHash = "AdeoTEK-DEV-Toolbox-{0}";
+        private static string _appHash = "AdeoTEK-DEV-Toolbox-{0}";
         
         /// <summary>
         ///  The main entry point for the application.
@@ -44,7 +47,7 @@ namespace Adeotek.DevToolbox
                 return;
             }
             
-            AppHash = string.Format(AppHash, Assembly.GetExecutingAssembly().GetType().GUID.ToString());
+            _appHash = string.Format(_appHash, Assembly.GetExecutingAssembly().GetType().GUID.ToString());
             
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
@@ -102,9 +105,9 @@ namespace Adeotek.DevToolbox
             // Configuration
             services.AddSingleton(_configuration);
             // Logger
-            if (!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".logs")))
+            if (!Directory.Exists(Path.Combine(_configuration["UserSettingsPath"], "logs")))
             {
-                Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".logs"));
+                Directory.CreateDirectory(Path.Combine(_configuration["UserSettingsPath"], "logs"));
             }
             var logMessages = new SerilogSinkEventsAggregator(_eventsAggregator);
             var logger = new LoggerConfiguration()
@@ -141,15 +144,24 @@ namespace Adeotek.DevToolbox
                 _environmentName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
             }
 
-            var configurationBuilder = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            if (_environmentName == "Development")
+            var userSettingsDirectoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), UserSettingsFilePath);
+            if (!Directory.Exists(userSettingsDirectoryPath))
             {
-                configurationBuilder.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
+                Directory.CreateDirectory(userSettingsDirectoryPath);
             }
+
+            var userSettingsFile = Path.Combine(userSettingsDirectoryPath, UserSettingsFileName);
+            if (!File.Exists(userSettingsFile))
+            {
+                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, AppSettingsFileName), userSettingsFile);
+            }
+
+            var configurationBuilder = new ConfigurationBuilder()
+                .SetBasePath(userSettingsDirectoryPath)
+                .AddJsonFile(UserSettingsFileName, optional: false, reloadOnChange: true);
             _configuration = configurationBuilder.Build();
             _configuration["AppPath"] = AppDomain.CurrentDomain.BaseDirectory;
+            _configuration["UserSettingsPath"] = userSettingsDirectoryPath;
         }
 
         private static void OnSessionSwitch(object sender, SessionSwitchEventArgs e)
